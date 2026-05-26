@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
+
 import { login } from "@/store/features/authSlice";
 import { loadCart } from "@/store/features/cartSlice";
 import { loadWishlist } from "@/store/features/wishlistSlice";
@@ -20,99 +21,73 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-
   const dispatch = useDispatch();
 
   const router = useRouter();
 
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-
-  const users = JSON.parse(
-    localStorage.getItem("users") || "[]"
-  );
-
-  const matchedUser = users.find(
-    (user: any) =>
-      user.email === email &&
-      user.password === password
-  );
-
-  if (matchedUser) {
-
-    dispatch(
-      login({
-        email,
-        password,
-      })
+    const users = JSON.parse(
+      localStorage.getItem("users") || "[]"
     );
 
-    alert("Login Successful");
-    dispatch(loadCart());
-    dispatch(loadWishlist());
+    const matchedUser = users.find(
+      (user: any) =>
+        user.email === email &&
+        user.password === password
+    );
 
-    router.push("/");
+    if (matchedUser) {
+      dispatch(
+        login({
+          email,
+          password,
+        })
+      );
 
-  } else {
+      alert("Login Successful");
 
-    alert("Invalid Email or Password");
+      dispatch(loadCart());
 
-  }
-};
+      dispatch(loadWishlist());
+
+      router.push("/");
+    } else {
+      alert("Invalid Email or Password");
+    }
+  };
 
   return (
     <>
       <Navbar />
 
-      <section className="min-h-screen bg-[#f8f5f0] overflow-hidden">
-        <div
-          className="max-w-7xl mx-auto grid lg:grid-cols-2 items-center"
-          style={{
-            padding: "110px 20px 80px",
-            minHeight: "100vh",
-            gap: "60px",
-          }}
-        >
+      <section className="min-h-screen overflow-hidden bg-[#f8f5f0]">
+        <div className="mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-4 pb-16 pt-[110px] sm:px-6 md:gap-14 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:pb-20">
+          
           {/* LEFT SIDE */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
+            className="text-center lg:text-left"
           >
-            <p
-              className="uppercase tracking-[4px] text-[#c9a96e] font-semibold"
-              style={{
-                fontSize: "11px",
-                marginBottom: "16px",
-                marginLeft: "10px"
-              }}
-            >
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[4px] text-[#c9a96e] sm:mb-5 sm:text-[12px]">
               Welcome
             </p>
 
-            <h1
-              className="font-black text-[#111827] leading-tight"
-              style={{
-                fontSize: "clamp(33px,5vw,70px)",
-                marginBottom: "22px",
-              }}
-            >
+            <h1 className="mb-5 text-[38px] font-black leading-[1.05] tracking-[-2px] text-[#111827] sm:text-[52px] md:text-[64px] lg:text-[62px]">
               Login To Your
               <br />
               Luxury Account
             </h1>
 
-            <p
-              className="text-gray-500 leading-8"
-              style={{
-                maxWidth: "520px",
-                fontSize: "16px",
-              }}
-            >
-              Access your wishlist, orders, premium handcrafted collections,
-              and luxury ceramic decor shopping experience.
+            <p className="mx-auto max-w-[580px] text-[15px] leading-8 text-gray-500 sm:text-[16px] lg:mx-0">
+              Access your wishlist, orders, premium
+              handcrafted collections, and luxury
+              ceramic decor shopping experience.
             </p>
           </motion.div>
 
@@ -121,155 +96,93 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-white relative overflow-hidden"
-            style={{
-              borderRadius: "36px",
-              padding: "40px 28px",
-              boxShadow: "0 15px 50px rgba(0,0,0,0.06)",
-            }}
+            className="relative overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_15px_50px_rgba(0,0,0,0.06)] sm:rounded-[36px] sm:p-8 md:p-10"
           >
             {/* Glow */}
-            <div
-              className="absolute -top-16 -right-16 bg-[#f3e4d1] blur-3xl opacity-40"
-              style={{
-                width: "180px",
-                height: "180px",
-                borderRadius: "999px",
-              }}
-            />
+            <div className="absolute -right-16 -top-16 h-[180px] w-[180px] rounded-full bg-[#f3e4d1] opacity-40 blur-3xl" />
 
             <div className="relative z-10">
-
+              
               {/* Heading */}
-              <div
-                style={{
-                  marginBottom: "32px",
-                }}
-              >
-                <h2
-                  className="font-black text-[#111827]"
-                  style={{
-                    fontSize: "34px",
-                    marginBottom: "10px",
-                  }}
-                >
+              <div className="mb-8 sm:mb-10">
+                <h2 className="mb-2 text-[30px] font-black text-[#111827] sm:mb-3 sm:text-[38px]">
                   Sign In
                 </h2>
 
-                <p className="text-gray-500 text-[15px]">
-                  Login to continue your luxury shopping journey.
+                <p className="text-[14px] text-gray-500 sm:text-[15px]">
+                  Login to continue your luxury
+                  shopping journey.
                 </p>
               </div>
 
               {/* Email */}
-              <div
-                style={{
-                  marginBottom: "20px",
-                }}
-              >
-                <label
-                  className="block font-medium text-[#111827]"
-                  style={{
-                    marginBottom: "10px",
-                    fontSize: "14px",
-                  }}
-                >
+              <div className="mb-5">
+                <label className="mb-2.5 block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
                   Email Address
                 </label>
 
-                <div
-                  className="flex items-center bg-[#f8f5f0] border border-transparent focus-within:border-black transition"
-                  style={{
-                    height: "58px",
-                    borderRadius: "18px",
-                    padding: "0 18px",
-                    gap: "12px",
-                  }}
-                >
-                  <FiMail className="text-gray-400 text-lg" />
+                <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:rounded-[18px] sm:px-5">
+                  <FiMail className="shrink-0 text-[18px] text-gray-400" />
 
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-transparent outline-none w-full text-black placeholder:text-gray-400"
+                    className="w-full bg-transparent text-[14px] text-black outline-none placeholder:text-gray-400 sm:text-[15px]"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
                   />
                 </div>
               </div>
 
               {/* Password */}
-              <div
-                style={{
-                  marginBottom: "16px",
-                }}
-              >
-                <label
-                  className="block font-medium text-[#111827]"
-                  style={{
-                    marginBottom: "10px",
-                    fontSize: "14px",
-                  }}
-                >
+              <div className="mb-4">
+                <label className="mb-2.5 block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
                   Password
                 </label>
 
-                <div
-                  className="flex items-center bg-[#f8f5f0] border border-transparent focus-within:border-black transition"
-                  style={{
-                    height: "58px",
-                    borderRadius: "18px",
-                    padding: "0 18px",
-                    gap: "12px",
-                  }}
-                >
-                  <FiLock className="text-gray-400 text-lg" />
+                <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:rounded-[18px] sm:px-5">
+                  <FiLock className="shrink-0 text-[18px] text-gray-400" />
 
                   <input
                     type="password"
                     placeholder="Enter your password"
-                    className="bg-transparent outline-none w-full text-black placeholder:text-gray-400"
+                    className="w-full bg-transparent text-[14px] text-black outline-none placeholder:text-gray-400 sm:text-[15px]"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) =>
+                      setPassword(e.target.value)
+                    }
                   />
                 </div>
               </div>
 
-              {/* Forgot */}
-              <div
-                className="flex justify-end"
-                style={{
-                  marginBottom: "28px",
-                }}
-              >
-                <button className="text-sm text-gray-500 hover:text-black transition">
+              {/* Forgot Password */}
+              <div className="mb-7 flex justify-end sm:mb-8">
+                <button className="text-[13px] font-medium text-gray-500 transition hover:text-black sm:text-sm">
                   Forgot Password?
                 </button>
               </div>
 
               {/* Login Button */}
-              <button
+              <motion.button
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleLogin}
-                className="w-full bg-black text-white hover:bg-[#1f1f1f] transition-all duration-300 flex items-center justify-center gap-3"
-                style={{
-                  height: "60px",
-                  borderRadius: "999px",
-                  fontWeight: "600",
-                  marginBottom: "24px",
-                }}
+                className="mb-6 flex h-[56px] w-full items-center justify-center gap-3 rounded-full bg-black text-[14px] font-semibold text-white transition-all duration-300 hover:bg-[#1f1f1f] sm:mb-7 sm:h-[60px] sm:text-[15px]"
               >
                 Login
                 <FiArrowRight />
-              </button>
+              </motion.button>
 
               {/* Bottom */}
               <div className="text-center">
-                <p className="text-gray-500 text-[15px]">
+                <p className="text-[14px] text-gray-500 sm:text-[15px]">
                   Don’t have an account?{" "}
-
+                  
                   <Link
                     href="/signup"
-                    className="text-black font-semibold hover:text-[#c9a96e] transition"
+                    className="font-semibold text-black transition hover:text-[#c9a96e]"
                   >
                     Create Account
                   </Link>

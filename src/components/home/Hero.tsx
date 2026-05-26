@@ -27,7 +27,7 @@ export default function Hero() {
           transition={{ duration: 1 }}
           className="text-center lg:text-left"
         >
-          <p className="uppercase tracking-[5px] text-[11px] text-[#c9a96e] font-semibold mb-4 mt-2">
+          <p className="uppercase tracking-[5px] text-[11px] text-[#c9a96e] font-semibold mb-4">
             Handcrafted Ceramic & Marble Art
           </p>
 

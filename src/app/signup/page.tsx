@@ -18,99 +18,74 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-
   const router = useRouter();
 
   const [name, setName] = useState("");
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSignup = (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
 
-  const userData = {
-    name,
-    email,
-    password,
+    const userData = {
+      name,
+      email,
+      password,
+    };
+
+    const existingUsers = JSON.parse(
+      localStorage.getItem("users") || "[]"
+    );
+
+    existingUsers.push(userData);
+
+    localStorage.setItem(
+      "users",
+      JSON.stringify(existingUsers)
+    );
+
+    alert("Account Created Successfully");
+
+    router.push("/login");
   };
-
-  const existingUsers = JSON.parse(
-    localStorage.getItem("users") || "[]"
-  );
-
-  existingUsers.push(userData);
-
-  localStorage.setItem(
-    "users",
-    JSON.stringify(existingUsers)
-  );
-
-  alert("Account Created Successfully");
-
-  router.push("/login");
-};
 
   return (
     <>
       <Navbar />
 
-      <section className="min-h-screen bg-[#f8f5f0] overflow-hidden">
-        <div
-          className="max-w-7xl mx-auto grid lg:grid-cols-2 items-center"
-          style={{
-            padding: "110px 20px 80px",
-            gap: "40px",
-          }}
-        >
+      <section className="min-h-screen overflow-hidden bg-[#f8f5f0]">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 pb-16 pt-[110px] sm:px-6 md:gap-14 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:pb-20">
+          
           {/* LEFT SIDE */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
+            className="text-center lg:text-left"
           >
-            <p
-              className="uppercase tracking-[4px] text-[#c9a96e] font-semibold"
-              style={{
-                fontSize: "11px",
-                marginBottom: "14px",
-                marginLeft: "10px"
-              }}
-            >
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[4px] text-[#c9a96e] sm:mb-5 sm:text-[12px]">
               Join NishMee
             </p>
 
-            <h1
-              className="font-black text-[#111827] leading-none"
-              style={{
-                fontSize: "clamp(33px,5vw,72px)",
-                marginBottom: "22px",
-              }}
-            >
+            <h1 className="mb-5 text-[38px] font-black leading-[1.02] tracking-[-2px] text-[#111827] sm:text-[52px] md:text-[64px] lg:text-[72px]">
               Create Your
               <br />
               Luxury Account
             </h1>
 
-            <p
-              className="text-gray-600 leading-7"
-              style={{
-                maxWidth: "520px",
-                fontSize: "15px",
-                marginBottom: "34px",
-              }}
-            >
-              Save your favorite handcrafted ceramic & marble decor,
-              manage orders, build your wishlist, and enjoy a premium
-              luxury shopping experience.
+            <p className="mx-auto mb-8 max-w-[580px] text-[15px] leading-8 text-gray-600 sm:mb-10 sm:text-[16px] lg:mx-0">
+              Save your favorite handcrafted ceramic &
+              marble decor, manage orders, build your
+              wishlist, and enjoy a premium luxury
+              shopping experience.
             </p>
 
             {/* FEATURES */}
-            <div
-              className="grid sm:grid-cols-2 gap-4"
-              style={{
-                maxWidth: "520px",
-              }}
-            >
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:max-w-[540px]">
               {[
                 "Save Wishlist",
                 "Track Orders",
@@ -119,29 +94,24 @@ export default function SignupPage() {
               ].map((item, index) => (
                 <motion.div
                   key={item}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
                   transition={{
                     delay: index * 0.1,
                   }}
-                  className="bg-white flex items-center gap-3 border border-[#ece7df]"
-                  style={{
-                    padding: "16px 18px",
-                    borderRadius: "18px",
-                  }}
+                  className="flex items-center gap-3 rounded-[18px] border border-[#ece7df] bg-white px-4 py-4 sm:px-5"
                 >
-                  <div
-                    className="bg-[#f8f5f0] text-[#c9a96e] flex items-center justify-center"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "999px",
-                    }}
-                  >
+                  <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-[#f8f5f0] text-[#c9a96e]">
                     <FiHeart />
                   </div>
 
-                  <p className="font-semibold text-[#111827] text-sm">
+                  <p className="text-sm font-semibold text-[#111827]">
                     {item}
                   </p>
                 </motion.div>
@@ -154,170 +124,110 @@ export default function SignupPage() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-white mx-auto w-full"
-            style={{
-              maxWidth: "500px",
-              borderRadius: "34px",
-              padding: "36px 28px",
-              boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
-            }}
+            className="mx-auto w-full max-w-[520px] rounded-[28px] bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.06)] sm:rounded-[34px] sm:p-8 md:p-10"
           >
+            
             {/* TOP */}
-            <div
-              style={{
-                marginBottom: "30px",
-              }}
-            >
-              <h2
-                className="font-black text-[#111827]"
-                style={{
-                  fontSize: "34px",
-                  marginBottom: "10px",
-                }}
-              >
+            <div className="mb-8 sm:mb-9">
+              <h2 className="mb-2 text-[30px] font-black text-[#111827] sm:mb-3 sm:text-[38px]">
                 Sign Up
               </h2>
 
-              <p className="text-gray-500 text-sm">
-                Create your account to continue shopping.
+              <p className="text-sm text-gray-500 sm:text-[15px]">
+                Create your account to continue
+                shopping.
               </p>
             </div>
 
             {/* FORM */}
             <form
               onSubmit={handleSignup}
-              className="flex flex-col"
-              style={{
-                gap: "18px",
-              }}
+              className="flex flex-col gap-5"
             >
+              
               {/* NAME */}
               <div>
-                <label
-                  className="font-medium text-[#111827] block"
-                  style={{
-                    marginBottom: "10px",
-                    fontSize: "14px",
-                  }}
-                >
+                <label className="mb-2.5 block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
                   Full Name
                 </label>
 
-                <div
-                  className="flex items-center bg-[#f8f5f0] border border-transparent focus-within:border-black transition"
-                  style={{
-                    height: "56px",
-                    borderRadius: "16px",
-                    padding: "0 18px",
-                    gap: "12px",
-                  }}
-                >
-                  <FiUser className="text-gray-400 text-lg" />
+                <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:px-5">
+                  <FiUser className="shrink-0 text-[18px] text-gray-400" />
 
                   <input
                     type="text"
                     placeholder="Enter your name"
-                    className="bg-transparent outline-none w-full text-sm"
+                    className="w-full bg-transparent text-[14px] text-black outline-none placeholder:text-gray-400 sm:text-[15px]"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) =>
+                      setName(e.target.value)
+                    }
                   />
                 </div>
               </div>
 
               {/* EMAIL */}
               <div>
-                <label
-                  className="font-medium text-[#111827] block"
-                  style={{
-                    marginBottom: "10px",
-                    fontSize: "14px",
-                  }}
-                >
+                <label className="mb-2.5 block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
                   Email Address
                 </label>
 
-                <div
-                  className="flex items-center bg-[#f8f5f0] border border-transparent focus-within:border-black transition"
-                  style={{
-                    height: "56px",
-                    borderRadius: "16px",
-                    padding: "0 18px",
-                    gap: "12px",
-                  }}
-                >
-                  <FiMail className="text-gray-400 text-lg" />
+                <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:px-5">
+                  <FiMail className="shrink-0 text-[18px] text-gray-400" />
 
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-transparent outline-none w-full text-sm"
+                    className="w-full bg-transparent text-[14px] text-black outline-none placeholder:text-gray-400 sm:text-[15px]"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
                   />
                 </div>
               </div>
 
               {/* PASSWORD */}
               <div>
-                <label
-                  className="font-medium text-[#111827] block"
-                  style={{
-                    marginBottom: "10px",
-                    fontSize: "14px",
-                  }}
-                >
+                <label className="mb-2.5 block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
                   Password
                 </label>
 
-                <div
-                  className="flex items-center bg-[#f8f5f0] border border-transparent focus-within:border-black transition"
-                  style={{
-                    height: "56px",
-                    borderRadius: "16px",
-                    padding: "0 18px",
-                    gap: "12px",
-                  }}
-                >
-                  <FiLock className="text-gray-400 text-lg" />
+                <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:px-5">
+                  <FiLock className="shrink-0 text-[18px] text-gray-400" />
 
                   <input
                     type="password"
                     placeholder="Create password"
-                    className="bg-transparent outline-none w-full text-sm"
+                    className="w-full bg-transparent text-[14px] text-black outline-none placeholder:text-gray-400 sm:text-[15px]"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) =>
+                      setPassword(e.target.value)
+                    }
                   />
                 </div>
               </div>
 
               {/* BUTTON */}
-              <button
+              <motion.button
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="bg-black text-white hover:bg-[#1f1f1f] transition-all duration-300 flex items-center justify-center gap-3"
-                style={{
-                  height: "58px",
-                  borderRadius: "999px",
-                  marginTop: "10px",
-                  fontWeight: "600",
-                }}
+                className="mt-2 flex h-[56px] items-center justify-center gap-3 rounded-full bg-black text-[14px] font-semibold text-white transition-all duration-300 hover:bg-[#1f1f1f] sm:h-[60px] sm:text-[15px]"
               >
                 Create Account
                 <FiArrowRight />
-              </button>
+              </motion.button>
             </form>
 
             {/* LOGIN */}
-            <div
-              className="text-center"
-              style={{
-                marginTop: "24px",
-              }}
-            >
-              <p className="text-gray-500 text-sm">
+            <div className="mt-6 text-center sm:mt-7">
+              <p className="text-sm text-gray-500 sm:text-[15px]">
                 Already have an account?{" "}
+                
                 <Link
                   href="/login"
-                  className="text-black font-semibold hover:text-[#c9a96e] transition"
+                  className="font-semibold text-black transition hover:text-[#c9a96e]"
                 >
                   Login
                 </Link>
