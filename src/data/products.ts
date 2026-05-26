@@ -11,9 +11,8 @@ export const products = [
     image: "/images/showpieces/showpiece2.png",
     gallery: [
       "/images/showpieces/showpiece2.png",
-      "/images/product1.jpg",
-      "/images/product1.jpg",
-      "/images/product1.jpg",
+      "/images/showpieces/showpiece2.1.png",
+      "/images/showpieces/showpiece2.2.png",
     ],
     description:
       "Black and red ceramic hand or fist sculptures in fist bump pose. Bold conversation piece.",

@@ -56,7 +56,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
-              className="text-center lg:text-left"
+              className="text-center lg:text-left order-1"
             >
               <p className="uppercase text-[#c9a96e] font-semibold tracking-[4px] text-[11px] mb-4">
                 About Our Brand
@@ -98,6 +98,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
+              className="order-2"
             >
               <div className="relative overflow-hidden bg-white h-[340px] sm:h-[420px] lg:h-[500px] rounded-[24px] sm:rounded-[30px] p-3 sm:p-[14px] shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
                 <div className="relative w-full h-full overflow-hidden rounded-[18px] sm:rounded-[24px]">
@@ -115,10 +116,12 @@ export default function AboutPage() {
                     <div className="w-10 h-10 sm:w-[46px] sm:h-[46px] bg-[#f8f5f0] rounded-full flex items-center justify-center shrink-0">
                       <FiStar className="text-[#c9a96e]" />
                     </div>
+
                     <div>
                       <h4 className="font-bold text-black text-[13px] sm:text-[15px] mb-0.5">
                         Luxury Handcrafted Art
                       </h4>
+
                       <p className="text-gray-500 text-[11px] sm:text-[12px]">
                         Elegant premium decor collection
                       </p>
@@ -132,30 +135,13 @@ export default function AboutPage() {
           {/* ── OUR STORY ── */}
           <div className="grid lg:grid-cols-2 items-center gap-10 lg:gap-14 mb-16 sm:mb-20 lg:mb-24">
 
-            {/* IMAGE */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
-              <div className="relative overflow-hidden h-[300px] sm:h-[380px] lg:h-[450px] rounded-[24px] sm:rounded-[30px]">
-                <Image
-                  src="/images/showpieces/showpiece1.jpeg"
-                  alt="Story"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </motion.div>
-
             {/* CONTENT */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="text-center lg:text-left"
+              className="text-center lg:text-left order-1 lg:order-2"
             >
               <p className="uppercase text-[#c9a96e] font-semibold tracking-[4px] text-[11px] mb-3.5">
                 Our Story
@@ -193,11 +179,30 @@ export default function AboutPage() {
                     <div className="w-[30px] h-[30px] bg-black text-white rounded-full flex items-center justify-center shrink-0">
                       <FiCheck className="text-sm" />
                     </div>
+
                     <span className="font-semibold text-black text-[14px]">
                       {item}
                     </span>
                   </div>
                 ))}
+              </div>
+            </motion.div>
+
+            {/* IMAGE */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="order-2 lg:order-1"
+            >
+              <div className="relative overflow-hidden h-[300px] sm:h-[380px] lg:h-[450px] rounded-[24px] sm:rounded-[30px]">
+                <Image
+                  src="/images/showpieces/showpiece1.jpeg"
+                  alt="Story"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </motion.div>
           </div>
