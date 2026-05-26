@@ -49,7 +49,6 @@ export default function Navbar() {
     (state: RootState) => state.auth
   );
 
-  // hydration issue fixed
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -64,141 +63,122 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
-        className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-gray-200"
+        className="fixed top-0 left-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl"
       >
-        <div className="container-custom h-20 flex items-center justify-between">
+        <div className="container-custom flex h-[74px] sm:h-20 items-center justify-between">
 
-          {/* Logo */}
-          <Link href="/">
-            <div className="flex flex-col items-center gap-1">
-              <div className="relative w-24 h-12 flex-shrink-0">
-                <Image
-                  src="/images/LOGO.png"
-                  alt="NishMee logo icon"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 120px, 160px"
-                  className="object-contain"
-                />
-              </div>
+          {/* LEFT */}
+          <div className="flex items-center gap-4 lg:gap-10">
 
-              <div className="flex flex-row items-center leading-none gap-[2px]">
+            {/* Mobile Menu Button */}
+            <button
+              className="flex lg:hidden items-center justify-center text-[22px] text-black transition hover:scale-110"
+              onClick={() => setMobileOpen((prev) => !prev)}
+              aria-label="Toggle Menu"
+            >
+              {mobileOpen ? <FiX /> : <FiMenu />}
+            </button>
+
+            {/* Logo */}
+            <Link href="/">
+              <div className="flex flex-col items-center justify-center">
+
+                <div className="relative h-10 w-20 sm:h-12 sm:w-24">
+                  <Image
+                    src="/images/LOGO.png"
+                    alt="NishMee Logo"
+                    fill
+                    priority
+                    className="object-contain"
+                  />
+                </div>
+
                 <div className="flex items-center leading-none">
-
-                  <span
-                    style={{
-                      fontFamily: "'Helvetica Neue', Arial, sans-serif",
-                      fontSize: "0.75rem",
-                      fontWeight: 1000,
-                      letterSpacing: "8px",
-                      color: "#1a1a2e",
-                      lineHeight: 1,
-                      textTransform: "uppercase",
-                    }}
-                  >
+                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[5px] text-[#111827]">
                     nish
                   </span>
 
-                  <span
-                    style={{
-                      fontFamily: "'Helvetica Neue', Arial, sans-serif",
-                      fontSize: "0.75rem",
-                      fontWeight: 1000,
-                      letterSpacing: "8px",
-                      color: "#c9a96e",
-                      lineHeight: 1,
-                      textTransform: "uppercase",
-                    }}
-                  >
+                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[5px] text-[#c9a96e]">
                     mee
                   </span>
-
                 </div>
+
               </div>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-10">
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-[15px] font-medium text-[#111827] transition hover:text-[#c9a96e]"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
 
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-[15px] font-medium hover:text-gray-500 transition"
-              >
-                {link.name}
-              </Link>
-            ))}
+          </div>
 
-          </nav>
-
-          {/* Right Side */}
-          <div className="flex items-center gap-4">
+          {/* RIGHT */}
+          <div className="flex items-center gap-3 sm:gap-4">
 
             {/* Search */}
-            <button className="hover:scale-110 transition text-xl">
+            <button className="hidden sm:flex text-[20px] text-black transition hover:scale-110">
               <FiSearch />
             </button>
 
-            {/* AUTH SECTION */}
-            {mounted ? (
-              currentUser ? (
+            {/* Desktop Auth */}
+            {currentUser ? (
 
-                <div className="hidden md:flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-3">
 
-                  {/* Profile */}
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-2 bg-black text-white hover:bg-[#c9a96e] transition"
-                    style={{
-                      height: "42px",
-                      padding: "0 18px",
-                      borderRadius: "999px",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    <FiUser />
-                    {currentUser.name}
-                  </Link>
-
-                  {/* Logout */}
-                  <button
-                    onClick={() => {
-                      dispatch(logout());
-                      dispatch(clearCartState());
-                      dispatch(clearWishlistState());
-                    }}
-                    className="w-10 h-10 rounded-full border border-gray-300 hover:bg-black hover:text-white transition flex items-center justify-center"
-                  >
-                    <FiLogOut />
-                  </button>
-
-                </div>
-
-              ) : (
-
+                {/* Profile */}
                 <Link
-                  href="/login"
-                  className="hidden md:flex items-center justify-center hover:scale-110 transition text-xl"
+                  href="/profile"
+                  className="flex h-11 items-center gap-2 rounded-full bg-black px-5 text-sm font-semibold text-white transition hover:bg-[#c9a96e]"
                 >
-                  <FiUser />
+                  <FiUser className="text-[16px]" />
+
+                  <span className="max-w-[120px] truncate">
+                    {currentUser.name}
+                  </span>
                 </Link>
 
-              )
+                {/* Logout */}
+                <button
+                  onClick={() => {
+                    dispatch(logout());
+                    dispatch(clearCartState());
+                    dispatch(clearWishlistState());
+                  }}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-300 text-[18px] text-black transition hover:bg-black hover:text-white"
+                >
+                  <FiLogOut />
+                </button>
+
+              </div>
+
             ) : (
-              <div className="hidden md:flex w-10 h-10" />
+
+              <Link
+                href="/login"
+                className="hidden md:flex items-center justify-center text-[22px] text-black transition hover:scale-110"
+              >
+                <FiUser />
+              </Link>
+
             )}
 
             {/* Wishlist */}
             <Link
               href="/wishlist"
-              className="relative hover:scale-110 transition text-xl"
+              className="relative flex items-center justify-center text-[20px] text-black transition hover:scale-110"
             >
               <FiHeart />
 
-              <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-black text-white text-[10px] flex items-center justify-center">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] text-white">
                 {wishlistItems.length}
               </span>
             </Link>
@@ -206,58 +186,153 @@ export default function Navbar() {
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative hover:scale-110 transition text-xl"
+              className="relative flex items-center justify-center text-[20px] text-black transition hover:scale-110"
             >
               <FiShoppingBag />
 
-              <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-black text-white text-[10px] flex items-center justify-center">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] text-white">
                 {cartItems.length}
               </span>
             </Link>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="lg:hidden hover:scale-110 transition text-xl"
-              onClick={() => setMobileOpen((prev) => !prev)}
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <FiX /> : <FiMenu />}
-            </button>
 
           </div>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
-
         {mobileOpen && (
 
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="fixed top-20 left-0 w-full z-40 bg-white/95 backdrop-blur-lg border-b border-gray-200 lg:hidden"
-          >
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+            />
 
-            <nav className="flex flex-col">
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.3 }}
+              className="fixed left-0 top-0 z-50 flex h-screen w-[82%] max-w-[340px] flex-col overflow-y-auto bg-white shadow-2xl lg:hidden"
+            >
 
-              {navLinks.map((link) => (
+              {/* Top */}
+              <div className="flex items-center justify-between border-b border-gray-200 px-5 py-5">
+
                 <Link
-                  key={link.name}
-                  href={link.href}
+                  href="/"
                   onClick={() => setMobileOpen(false)}
-                  className="text-[15px] font-medium text-gray-800 hover:text-[#c9a96e] hover:bg-gray-50 transition"
-                  style={{ padding: "14px 24px" }}
                 >
-                  {link.name}
-                </Link>
-              ))}
+                  <div className="flex flex-col">
 
-              {/* Mobile Auth */}
-              {mounted && (
-                currentUser ? (
+                    <div className="relative h-10 w-20">
+                      <Image
+                        src="/images/LOGO.png"
+                        alt="NishMee Logo"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+
+                    <div className="flex items-center leading-none">
+                      <span className="text-[9px] font-black uppercase tracking-[5px] text-[#111827]">
+                        nish
+                      </span>
+
+                      <span className="text-[9px] font-black uppercase tracking-[5px] text-[#c9a96e]">
+                        mee
+                      </span>
+                    </div>
+
+                  </div>
+                </Link>
+
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="text-[24px] text-black"
+                >
+                  <FiX />
+                </button>
+
+              </div>
+
+              {/* Mobile User Info */}
+              {currentUser ? (
+
+                <div className="border-b border-gray-200 bg-[#f8f5f0] px-5 py-5">
+
+                  <div className="flex items-center gap-3">
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-white">
+                      <FiUser className="text-[18px]" />
+                    </div>
+
+                    <div>
+                      <p className="text-[13px] text-gray-500">
+                        Logged in as
+                      </p>
+
+                      <h3 className="max-w-[180px] truncate text-[16px] font-bold text-[#111827]">
+                        {currentUser.name}
+                      </h3>
+                    </div>
+
+                  </div>
+
+                  {/* Mobile Profile Button */}
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="mt-4 flex h-11 items-center justify-center rounded-full bg-black text-sm font-semibold text-white transition hover:bg-[#c9a96e]"
+                  >
+                    View Profile
+                  </Link>
+
+                </div>
+
+              ) : (
+
+                <div className="border-b border-gray-200 px-5 py-5">
+
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex h-12 items-center justify-center gap-2 rounded-full bg-black text-sm font-semibold text-white transition hover:bg-[#c9a96e]"
+                  >
+                    <FiUser />
+                    Login / Signup
+                  </Link>
+
+                </div>
+
+              )}
+
+              {/* Nav Links */}
+              <nav className="flex flex-1 flex-col py-3">
+
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center px-5 py-4 text-[15px] font-medium text-[#111827] transition hover:bg-[#f8f5f0] hover:text-[#c9a96e]"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+
+              </nav>
+
+              {/* Bottom Logout */}
+              {currentUser && (
+
+                <div className="border-t border-gray-200 p-5">
 
                   <button
                     onClick={() => {
@@ -266,34 +341,19 @@ export default function Navbar() {
                       dispatch(clearWishlistState());
                       setMobileOpen(false);
                     }}
-                    className="text-[15px] font-medium text-red-500 hover:bg-gray-50 transition flex items-center gap-3"
-                    style={{ padding: "14px 24px" }}
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 text-sm font-semibold text-red-500 transition hover:bg-red-500 hover:text-white"
                   >
                     <FiLogOut />
                     Logout
                   </button>
 
-                ) : (
+                </div>
 
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="text-[15px] font-medium text-gray-800 hover:text-[#c9a96e] hover:bg-gray-50 transition flex items-center gap-3"
-                    style={{ padding: "14px 24px" }}
-                  >
-                    <FiUser />
-                    Login / Signup
-                  </Link>
-
-                )
               )}
 
-            </nav>
-
-          </motion.div>
-
+            </motion.div>
+          </>
         )}
-
       </AnimatePresence>
     </>
   );
