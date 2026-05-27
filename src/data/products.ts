@@ -1,6 +1,7 @@
 export const products = [
   {
     id: 1,
+    slug: "fist-bump-couple-sculpture",
     title: "Fist Bump Couple Sculpture",
     category: "Showpieces",
     price: 89,
@@ -26,6 +27,7 @@ export const products = [
 
   {
     id: 2,
+    slug: "hug-couple-figurine",
     title: "Hug Couple Figurine",
     category: "Handcraft Idols",
     price: 119,
@@ -36,9 +38,9 @@ export const products = [
     image: "/images/Idols/idols2.png",
     gallery: [
       "/images/Idols/idols2.png",
-      "/images/product2.jpg",
-      "/images/product2.jpg",
-      "/images/product2.jpg",
+      "/images/Idols/idols2.1.png",
+      "/images/Idols/idols2.2.png",
+      "/images/Idols/idols2.3.png",
     ],
     description:
       "White and black abstract human couple hugging each other. Togetherness concept piece.",
@@ -52,6 +54,7 @@ export const products = [
 
   {
     id: 3,
+    slug: "teal-floral-crown-donut-vase",
     title: "Teal Floral Crown Donut Vase",
     category: "Vases",
     price: 59,
@@ -62,9 +65,9 @@ export const products = [
     image: "/images/Vases/Vase2.jpeg",
     gallery: [
       "/images/Vases/vase2.jpeg",
-      "/images/product3.jpg",
-      "/images/product3.jpg",
-      "/images/product3.jpg",
+      "/images/Vases/Vase2.1.jpeg",
+      "/images/Vases/Vase2.2.jpeg",
+      "/images/Vases/Vase2.jpeg",
     ],
     description:
       "Teal donut vase with stunning 3D ceramic flower crown on top. Premium product shot.",
@@ -78,6 +81,7 @@ export const products = [
 
   {
     id: 4,
+    slug: "black-phoenix",
     title: "Black Phoenix",
     category: "Showpieces",
     price: 149,
@@ -88,9 +92,9 @@ export const products = [
     image: "/images/showpieces/showpiece3.png",
     gallery: [
       "/images/showpieces/showpiece3.png",
-      "/images/product4.jpg",
-      "/images/product4.jpg",
-      "/images/product4.jpg",
+      "/images/showpieces/showpiece3.1.png",
+      "/images/showpieces/showpiece3.2.png",
+      "/images/showpieces/showpiece3.3.png",
     ],
     description:
       "Black and red matching phoenix or bird abstract sculptures. Foam background product shot.",
@@ -104,6 +108,7 @@ export const products = [
 
   {
     id: 5,
+    slug: "speckled-orbit-vase",
     title: "Speckled Orbit Vase",
     category: "Vases",
     price: 99,
@@ -114,9 +119,9 @@ export const products = [
     image: "/images/Vases/Vase3.png",
     gallery: [
       "/images/Vases/Vase3.png",
-      "/images/product5.jpg",
-      "/images/product5.jpg",
-      "/images/product5.jpg",
+      "/images/Vases/Vase3.1.png",
+      "/images/Vases/Vase3.2.png",
+      "/images/Vases/Vase3.3.png",
     ],
     description:
       "Round donut-shaped beige matte vase with blue speckles and center hole. Minimalist handcrafted design.",
@@ -130,6 +135,7 @@ export const products = [
 
   {
     id: 6,
+    slug: "white-yoga-thinker-set",
     title: "White Yoga Thinker Set",
     category: "Handcraft Idols",
     price: 79,
@@ -140,9 +146,9 @@ export const products = [
     image: "/images/Idols/idols3.png",
     gallery: [
       "/images/Idols/idols3.png",
-      "/images/product6.jpg",
-      "/images/product6.jpg",
-      "/images/product6.jpg",
+      "/images/Idols/idols3.1.png",
+      "/images/Idols/idols3.2.png",
+      "/images/Idols/idols3.3.png",
     ],
     description:
       "3 white abstract human figurines in yoga or contemplative sitting poses. Workshop floor shot.",
@@ -156,6 +162,7 @@ export const products = [
 
   {
     id: 7,
+    slug: "cherry-spiral-triple-vase",
     title: "Cherry Spiral Triple Vase",
     category: "Vases",
     price: 69,
@@ -182,6 +189,7 @@ export const products = [
 
   {
     id: 8,
+    slug: "dancing-couple-figurine",
     title: "Dancing Couple Figurine",
     category: "Showpieces",
     price: 179,
@@ -208,6 +216,7 @@ export const products = [
 
   {
     id: 9,
+    slug: "premium-gift-hamper-set",
     title: "Premium Gift Hamper Set",
     category: "Gift Items",
     price: 199,
@@ -234,6 +243,7 @@ export const products = [
 
   {
     id: 10,
+    slug: "decorative-lord-ganesha-idol",
     title: "Decorative Lord Ganesha Idol",
     category: "Idols",
     price: 159,
@@ -260,6 +270,7 @@ export const products = [
 
   {
     id: 11,
+    slug: "minimal-ceramic-flower-pot",
     title: "Minimal Ceramic Flower Pot",
     category: "Ceramic",
     price: 89,
@@ -286,6 +297,7 @@ export const products = [
 
   {
     id: 12,
+    slug: "marble-dust-decorative-bowl",
     title: "Marble Dust Decorative Bowl",
     category: "Marble Dust",
     price: 129,
@@ -312,6 +324,7 @@ export const products = [
 
   {
     id: 13,
+    slug: "designer-tea-mug-collection",
     title: "Designer Tea Mug Collection",
     category: "Mugs",
     price: 79,
@@ -338,6 +351,7 @@ export const products = [
 
   {
     id: 14,
+    slug: "royal-horse-showpiece",
     title: "Royal Horse Showpiece",
     category: "Showpieces",
     price: 189,
@@ -364,6 +378,7 @@ export const products = [
 
   {
     id: 15,
+    slug: "premium-ceramic-dinner-plate",
     title: "Premium Ceramic Dinner Plate",
     category: "Kitchen Ware",
     price: 109,
@@ -390,6 +405,7 @@ export const products = [
 
   {
     id: 16,
+    slug: "traditional-hanging-art-plate",
     title: "Traditional Hanging Art Plate",
     category: "Hanging Plates",
     price: 99,
@@ -416,6 +432,7 @@ export const products = [
 
   {
     id: 17,
+    slug: "luxury-decorative-lantern",
     title: "Luxury Decorative Lantern",
     category: "Decorative Items",
     price: 139,
@@ -442,6 +459,7 @@ export const products = [
 
   {
     id: 18,
+    slug: "abstract-luxury-wall-frame",
     title: "Abstract Luxury Wall Frame",
     category: "Wall Decor",
     price: 249,
@@ -468,6 +486,7 @@ export const products = [
 
   {
     id: 19,
+    slug: "festive-luxury-gift-box",
     title: "Festive Luxury Gift Box",
     category: "Gift Items",
     price: 229,
@@ -494,6 +513,7 @@ export const products = [
 
   {
     id: 20,
+    slug: "premium-buddha-idol",
     title: "Premium Buddha Idol",
     category: "Idols",
     price: 279,

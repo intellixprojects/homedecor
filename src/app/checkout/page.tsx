@@ -18,20 +18,29 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@/store/store";
 
 import Footer from "@/components/footer/Footer";
 
+import { clearCart } from "@/store/features/cartSlice";
+
 export default function CheckoutPage() {
+
+  const dispatch = useDispatch();
+
   const { cartItems } = useSelector(
     (state: RootState) => state.cart
   );
 
+  const { currentUser } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
+    fullName: currentUser?.name || "",
+    email: currentUser?.email || "",
     phone: "",
     address: "",
     city: "",
@@ -67,32 +76,87 @@ export default function CheckoutPage() {
   };
 
   const handlePlaceOrder = () => {
-    if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.address
-    ) {
-      alert("Please fill all required fields");
-      return;
-    }
 
-    alert("Order Placed Successfully");
+  if (
+    !formData.fullName ||
+    !formData.email ||
+    !formData.phone ||
+    !formData.address
+  ) {
+    alert("Please fill all required fields");
+    return;
+  }
 
-    localStorage.removeItem("cartItems");
+  const currentUser = JSON.parse(
+    localStorage.getItem("currentUser") || "{}"
+  );
 
-    window.location.href = "/success";
+  const existingOrders = JSON.parse(
+    localStorage.getItem("orders") || "[]"
+  );
+
+  const newOrder = {
+    orderId: `NSH-${Date.now()}`,
+    userEmail: currentUser.email,
+
+    date: new Date().toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+
+    estimatedDelivery: "3 - 5 Business Days",
+
+    subtotal,
+    shipping,
+    discount,
+
+    totalAmount: total,
+
+    status: "Processing",
+
+    shippingAddress: `
+      ${formData.fullName},
+      ${formData.address},
+      ${formData.city},
+      ${formData.state},
+      ${formData.zip}
+    `,
+
+    items: cartItems.map((item) => ({
+      id: item.id,
+      title: item.title,
+      image: item.image,
+      price: item.price,
+      quantity: item.quantity,
+      totalPrice: item.price * item.quantity,
+    })),
   };
+
+  localStorage.setItem(
+    "orders",
+    JSON.stringify([
+      ...existingOrders,
+      newOrder,
+    ])
+  );
+
+  localStorage.removeItem("cartItems");
+
+  alert("Order Placed Successfully");
+
+  window.location.href = "/success";
+};
 
   return (
     <>
       <section className="min-h-screen bg-[#f8f5f0]">
-        
+
         {/* TOP BAR */}
         <div className="border-b border-[#ede9e3] bg-white py-[18px]">
-          
+
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6">
-            
+
             <Link
               href="/cart"
               className="flex items-center gap-2 text-[13px] font-semibold text-[#a89880] transition-colors hover:text-black"
@@ -107,14 +171,14 @@ export default function CheckoutPage() {
 
             {/* STEPS */}
             <div className="hidden items-center gap-2 text-[12px] font-semibold md:flex">
-              
+
               {["Cart", "Shipping", "Payment"].map((step, i) => (
-                
+
                 <div
                   key={step}
                   className="flex items-center gap-2"
                 >
-                  
+
                   <div
                     className={`flex items-center gap-1.5 ${
                       i <= 1
@@ -122,7 +186,7 @@ export default function CheckoutPage() {
                         : "text-[#c4b8a8]"
                     }`}
                   >
-                    
+
                     <div
                       className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
                         i <= 1
@@ -130,7 +194,7 @@ export default function CheckoutPage() {
                           : "bg-[#e8e0d4] text-[#a89880]"
                       }`}
                     >
-                      
+
                       {
                         i <= 1
                           ? <FiCheck size={10} />
@@ -162,26 +226,26 @@ export default function CheckoutPage() {
         </div>
 
         <div className="mx-auto max-w-7xl px-5 pb-[90px] pt-[50px]">
-          
+
           {/* MAIN */}
           <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
-            
+
             {/* LEFT */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               className="rounded-[34px] bg-white p-[34px] shadow-[0_10px_40px_rgba(0,0,0,0.05)]"
             >
-              
+
               <h2 className="mb-7 text-[30px] font-black text-[#111827]">
                 Shipping Details
               </h2>
 
               <div className="grid gap-5 sm:grid-cols-2">
-                
+
                 {/* FULL NAME */}
                 <div>
-                  
+
                   <label className="mb-[10px] block text-sm font-medium">
                     Full Name
                   </label>
@@ -199,7 +263,7 @@ export default function CheckoutPage() {
 
                 {/* EMAIL */}
                 <div>
-                  
+
                   <label className="mb-[10px] block text-sm font-medium">
                     Email Address
                   </label>
@@ -217,7 +281,7 @@ export default function CheckoutPage() {
 
                 {/* PHONE */}
                 <div>
-                  
+
                   <label className="mb-[10px] block text-sm font-medium">
                     Phone Number
                   </label>
@@ -235,7 +299,7 @@ export default function CheckoutPage() {
 
                 {/* CITY */}
                 <div>
-                  
+
                   <label className="mb-[10px] block text-sm font-medium">
                     City
                   </label>
@@ -255,7 +319,7 @@ export default function CheckoutPage() {
 
               {/* ADDRESS */}
               <div className="mt-[22px]">
-                
+
                 <label className="mb-[10px] block text-sm font-medium">
                   Full Address
                 </label>
@@ -273,9 +337,9 @@ export default function CheckoutPage() {
 
               {/* STATE + ZIP */}
               <div className="mt-[22px] grid gap-5 sm:grid-cols-2">
-                
+
                 <div>
-                  
+
                   <label className="mb-[10px] block text-sm font-medium">
                     State
                   </label>
@@ -292,7 +356,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  
+
                   <label className="mb-[10px] block text-sm font-medium">
                     ZIP Code
                   </label>
@@ -318,13 +382,13 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, y: 0 }}
               className="sticky top-28 flex flex-col gap-5"
             >
-              
+
               {/* ORDER SUMMARY */}
               <div className="h-fit rounded-[34px] bg-white p-[30px] shadow-[0_10px_40px_rgba(0,0,0,0.05)]">
-                
+
                 {/* HEADER */}
                 <div className="mb-[26px] flex items-center justify-between">
-                  
+
                   <h2 className="text-[28px] font-black text-[#111827]">
                     Order Summary
                   </h2>
@@ -337,17 +401,17 @@ export default function CheckoutPage() {
 
                 {/* PRODUCTS */}
                 <div className="mb-[26px] flex flex-col gap-4">
-                  
+
                   {
                     cartItems.map((item) => (
-                      
+
                       <div
                         key={item.id}
                         className="flex items-center gap-4"
                       >
-                        
+
                         <div className="relative h-[72px] w-[72px] flex-shrink-0 overflow-hidden rounded-[18px] bg-[#f8f5f0]">
-                          
+
                           <Image
                             src={item.image}
                             alt={item.title}
@@ -358,7 +422,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="flex-1">
-                          
+
                           <h3 className="mb-[6px] text-[15px] font-bold leading-[1.3] text-[#111827]">
                             {item.title}
                           </h3>
@@ -381,11 +445,11 @@ export default function CheckoutPage() {
 
                 {/* TOTALS */}
                 <div className="mb-[24px] border-t border-dashed border-[#e8e0d4] pt-6">
-                  
+
                   <div className="mb-4 flex items-center justify-between">
-                    
+
                     <div>
-                      
+
                       <p className="text-[14px] text-[#a89880]">
                         Subtotal
                       </p>
@@ -405,9 +469,9 @@ export default function CheckoutPage() {
                   {
                     discount > 0 && (
                       <div className="mb-4 flex items-center justify-between">
-                        
+
                         <div>
-                          
+
                           <p className="text-[14px] text-[#a89880]">
                             Discount (10%)
                           </p>
@@ -427,9 +491,9 @@ export default function CheckoutPage() {
                   }
 
                   <div className="mb-[22px] flex items-center justify-between">
-                    
+
                     <div>
-                      
+
                       <p className="text-[14px] text-[#a89880]">
                         Shipping
                       </p>
@@ -468,9 +532,9 @@ export default function CheckoutPage() {
 
                   {/* TOTAL */}
                   <div className="flex items-center justify-between rounded-[22px] bg-[#111827] px-[22px] py-5">
-                    
+
                     <div>
-                      
+
                       <p className="text-sm text-white/60">
                         Total Amount
                       </p>
@@ -491,17 +555,21 @@ export default function CheckoutPage() {
 
                 {/* PAYMENT */}
                 <div className="mb-[24px] rounded-[24px] bg-[#f8f5f0] p-[18px]">
-                  
+
                   <div className="flex items-center gap-4">
-                    
+
                     <div className="flex h-[52px] w-[52px] items-center justify-center rounded-[16px] bg-white">
                       <FiCreditCard />
                     </div>
 
                     <div>
-                      
+
                       <p className="font-bold text-[#111827]">
                         Cash On Delivery
+                      </p>
+
+                      <p className="text-sm text-[#a89880]">
+                        Pay when your order arrives
                       </p>
 
                     </div>
@@ -517,7 +585,7 @@ export default function CheckoutPage() {
                   onClick={handlePlaceOrder}
                   className="mb-[18px] flex h-[60px] w-full items-center justify-center gap-3 rounded-full bg-[#c9a96e] text-[15px] font-extrabold text-black transition-all duration-300 hover:bg-[#b8955a]"
                 >
-                  
+
                   <FiLock size={15} />
 
                   Place Secure Order
@@ -526,7 +594,7 @@ export default function CheckoutPage() {
 
                 {/* TRUST */}
                 <div className="flex flex-wrap items-center justify-center gap-5">
-                  
+
                   <div className="flex items-center gap-2 text-[12px] font-semibold text-[#a89880]">
                     <FiShield size={13} />
                     Secure

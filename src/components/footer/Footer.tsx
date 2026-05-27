@@ -9,68 +9,35 @@ import {
 
 export default function Footer() {
   return (
-    <footer
-      className="relative overflow-hidden bg-[#0d0d0d] text-white"
-      style={{
-        padding: "90px 0 30px",
-        marginTop: "80px",
-      }}
-    >
+    <footer className="relative overflow-hidden bg-[#0d0d0d] text-white mt-16 sm:mt-20">
       {/* Background Glow */}
-      <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-white/5 rounded-full blur-3xl opacity-30" />
+      <div className="absolute top-0 left-0 h-[220px] w-[220px] sm:h-[300px] sm:w-[300px] rounded-full bg-white/5 blur-3xl opacity-30" />
 
-      <div
-        className="relative z-10 container-custom"
-        style={{
-          padding: "0 20px",
-        }}
-      >
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 pb-8">
         {/* Top Section */}
-        <div
-          className="grid md:grid-cols-2 lg:grid-cols-4 border-b border-white/10"
-          style={{
-            gap: "50px",
-            paddingBottom: "50px",
-          }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-14 border-b border-white/10 pb-12">
           {/* Brand */}
           <div>
-            <h2
-              className="text-4xl font-black tracking-wide"
-              style={{
-                marginBottom: "20px",
-              }}
-            >
-              NishMee
+            <h2 className="text-3xl sm:text-3xl font-black tracking-wide mb-5">
+              NISH
+              <span className="flex-row text-[#c9a96e]">MEE</span>
             </h2>
 
-            <p
-              className="text-gray-400 leading-8"
-              style={{
-                marginBottom: "28px",
-              }}
-            >
-              Transform your home with premium ceramic decor, marble dust art, luxury mugs, idols, wall decor, and handcrafted pieces designed for timeless elegance.
+            <p className="text-gray-400 leading-7 sm:leading-8 text-sm sm:text-base mb-7">
+              Transform your home with premium ceramic decor, marble dust art,
+              luxury mugs, idols, wall decor, and handcrafted pieces designed
+              for timeless elegance.
             </p>
 
             {/* Social Icons */}
-            <div
-              className="flex items-center"
-              style={{
-                gap: "14px",
-              }}
-            >
+            <div className="flex items-center gap-3 sm:gap-4">
               {[FiFacebook, FiInstagram, FiTwitter, FiYoutube].map(
                 (Icon, index) => (
                   <button
                     key={index}
-                    className="bg-white/10 hover:bg-[#d6bfa7] hover:text-black rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                    style={{
-                      width: "46px",
-                      height: "46px",
-                    }}
+                    className="h-11 w-11 rounded-full bg-white/10 hover:bg-[#d6bfa7] hover:text-black flex items-center justify-center transition-all duration-300 hover:scale-110"
                   >
-                    <Icon />
+                    <Icon size={18} />
                   </button>
                 )
               )}
@@ -79,21 +46,11 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3
-              className="text-xl font-bold"
-              style={{
-                marginBottom: "24px",
-              }}
-            >
+            <h3 className="text-lg sm:text-xl font-bold mb-6">
               Quick Links
             </h3>
 
-            <div
-              className="flex flex-col text-gray-400"
-              style={{
-                gap: "16px",
-              }}
-            >
+            <div className="flex flex-col gap-4 text-gray-400 text-sm sm:text-base">
               {[
                 { name: "Home", path: "/" },
                 { name: "Shop", path: "/products" },
@@ -103,11 +60,11 @@ export default function Footer() {
                 <Link
                   key={index}
                   href={item.path}
-                  className="hover:text-white transition duration-300 flex items-center gap-2 group"
+                  className="group flex items-center gap-2 transition duration-300 hover:text-white w-fit"
                 >
                   {item.name}
 
-                  <FiArrowUpRight className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-300" />
+                  <FiArrowUpRight className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                 </Link>
               ))}
             </div>
@@ -115,21 +72,11 @@ export default function Footer() {
 
           {/* Categories */}
           <div>
-            <h3
-              className="text-xl font-bold"
-              style={{
-                marginBottom: "24px",
-              }}
-            >
+            <h3 className="text-lg sm:text-xl font-bold mb-6">
               Categories
             </h3>
 
-            <div
-              className="flex flex-col text-gray-400"
-              style={{
-                gap: "16px",
-              }}
-            >
+            <div className="flex flex-col gap-4 text-gray-400 text-sm sm:text-base">
               {[
                 { name: "Lamps", path: "/category/" },
                 { name: "Chairs", path: "/category/chairs" },
@@ -139,11 +86,11 @@ export default function Footer() {
                 <Link
                   key={index}
                   href={item.path}
-                  className="hover:text-white transition duration-300 flex items-center gap-2 group"
+                  className="group flex items-center gap-2 transition duration-300 hover:text-white w-fit"
                 >
                   {item.name}
 
-                  <FiArrowUpRight className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-300" />
+                  <FiArrowUpRight className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                 </Link>
               ))}
             </div>
@@ -151,70 +98,37 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3
-              className="text-xl font-bold"
-              style={{
-                marginBottom: "24px",
-              }}
-            >
+            <h3 className="text-lg sm:text-xl font-bold mb-6">
               Stay Updated
             </h3>
 
-            <p
-              className="text-gray-400 leading-7"
-              style={{
-                marginBottom: "22px",
-              }}
-            >
+            <p className="text-gray-400 leading-7 text-sm sm:text-base mb-6">
               Subscribe for luxury decor inspiration and exclusive offers.
             </p>
 
-            <div
-              className="bg-white/10 border border-white/10 rounded-full flex items-center overflow-hidden"
-              style={{
-                padding: "8px",
-              }}
-            >
+            <div className="bg-white/10 border border-white/10 rounded-2xl sm:rounded-full p-2 flex items-center overflow-hidden">
               <input
                 type="email"
                 placeholder="Your email"
-                className="flex-1 bg-transparent text-white placeholder:text-gray-500 outline-none"
-                style={{
-                  paddingLeft: "10px",
-                  height: "52px",
-                }}
+                className="flex-1 bg-transparent text-white placeholder:text-gray-500 outline-none px-4 h-12 text-sm sm:text-base min-w-0"
               />
 
-              <button
-                className="bg-[#d6bfa7] text-black font-semibold rounded-full hover:bg-white transition duration-300"
-                style={{
-                  padding: "0 20px",
-                  marginRight: "4px",
-                  height: "52px",
-                }}
-              >
-                Join
+              <button className="shrink-0 h-12 px-5 sm:px-6 rounded-xl sm:rounded-full bg-[#d6bfa7] text-black font-semibold hover:bg-white transition duration-300 flex items-center justify-center">
+                <span className="hidden sm:block">Join</span>
+
+                <FiArrowUpRight className="text-lg sm:hidden" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Bottom */}
-        <div
-          className="flex flex-col md:flex-row items-center justify-between text-gray-500"
-          style={{
-            paddingTop: "28px",
-            gap: "12px",
-          }}
-        >
-          <p>© 2026 DECORA. All Rights Reserved.</p>
+        <div className="pt-7 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-500 text-sm sm:text-base">
+          <p className="text-center md:text-left">
+            © 2026 NISHMEE. All Rights Reserved.
+          </p>
 
-          <div
-            className="flex items-center"
-            style={{
-              gap: "18px",
-            }}
-          >
+          <div className="flex flex-wrap items-center justify-center gap-5">
             <Link
               href="/"
               className="hover:text-white transition duration-300"
