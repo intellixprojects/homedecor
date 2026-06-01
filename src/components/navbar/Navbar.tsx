@@ -16,7 +16,7 @@ import {
   FiSearch,
   FiLogOut,
   FiPackage,
-  FiMapPin,
+  FiChevronDown,
 } from "react-icons/fi";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -35,16 +35,51 @@ import { products } from "@/data/products";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Shop", href: "/products" },
-  { name: "Collections", href: "/collections" },
+
+  {
+    name: "Home Decor",
+    dropdown: [
+      {
+        name: "Vases",
+        href: "/products?category=vases",
+      },
+      {
+        name: "Showpieces",
+        href: "/products?category=showpieces",
+      },
+      {
+        name: "Handcraft Idols",
+        href: "/products?category=idols",
+      },
+    ],
+  },
+
+  {
+    name: "Spiritual Decor",
+    dropdown: [
+      {
+        name: "Krishna Collection",
+        href: "/products?category=krishna",
+      },
+      {
+        name: "Buddha & Monk Collection",
+        href: "/products?category=buddha-monk",
+      },
+      {
+        name: "Ganesha Collection",
+        href: "/products?category=ganesh",
+      },
+    ],
+  },
+
   { name: "About", href: "/about" },
+
   { name: "Contact", href: "/contact" },
 ];
 
 const profileMenuItems = [
   { name: "Profile", href: "/profile", icon: FiUser },
   { name: "Order History", href: "/orders", icon: FiPackage },
-  { name: "Track Order", href: "/track-order", icon: FiMapPin },
 ];
 
 export default function Navbar() {
@@ -72,6 +107,12 @@ export default function Navbar() {
   );
 
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+  const [activeDropdown, setActiveDropdown] =
+    useState<string | null>(null);
+
+  const [mobileDropdown, setMobileDropdown] =
+    useState<string | null>(null);
 
   /* FIX MOBILE LOGIN PERSIST */
   useEffect(() => {
@@ -125,17 +166,6 @@ export default function Navbar() {
         handleClickOutside
       );
   }, []);
-
-  /* PREVENT HYDRATION ISSUE */
-  // if (!mounted) {
-  //   return (
-  //     <header className="fixed top-0 left-0 z-50 w-full border-b border-gray-200 bg-white">
-  //       <div className="container-custom flex h-[74px] items-center justify-between">
-  //         <div className="h-10 w-20" />
-  //       </div>
-  //     </header>
-  //   );
-  // }
 
   /* SEARCH FILTER */
   const filteredProducts = products.filter((item: any) => {
@@ -230,16 +260,66 @@ export default function Navbar() {
             </Link>
 
             {/* DESKTOP NAV */}
-            <nav className="hidden lg:flex items-center gap-8 xl:gap-10 ml-40">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-[15px] font-medium text-[#111827] transition hover:text-[#c9a96e]"
-                >
-                  {link.name}
-                </Link>
-              ))}
+            <nav className="hidden lg:flex items-center gap-7 xl:gap-10 ml-44">
+              {navLinks.map((link: any) =>
+                link.dropdown ? (
+                  <div
+                    key={link.name}
+                    className="relative"
+                    onMouseEnter={() =>
+                      setActiveDropdown(link.name)
+                    }
+                    onMouseLeave={() =>
+                      setActiveDropdown(null)
+                    }
+                  >
+                    <button className="flex items-center gap-1 text-[15px] font-medium text-[#111827] hover:text-[#c9a96e] transition">
+                      {link.name}
+                      <FiChevronDown size={14} />
+                    </button>
+
+                    <AnimatePresence>
+                      {activeDropdown === link.name && (
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 10,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          exit={{
+                            opacity: 0,
+                            y: 10,
+                          }}
+                          className="absolute left-0 top-full mt-3 w-60 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl"
+                        >
+                          {link.dropdown.map(
+                            (item: any) => (
+                              <Link
+                                key={item.name}
+                                href={item.href}
+                                className="block px-5 py-3 text-[14px] text-[#111827] hover:bg-[#f8f5f0] hover:text-[#c9a96e]"
+                              >
+                                {item.name}
+                              </Link>
+                            )
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="text-[15px] font-medium text-[#111827] hover:text-[#c9a96e]"
+                  >
+                    {link.name}
+                  </Link>
+                )
+              )}
             </nav>
           </div>
 
@@ -275,11 +355,10 @@ export default function Navbar() {
                     </span>
 
                     <svg
-                      className={`ml-1 h-3 w-3 transition-transform duration-200 ${
-                        profileDropdownOpen
-                          ? "rotate-180"
-                          : ""
-                      }`}
+                      className={`ml-1 h-3 w-3 transition-transform duration-200 ${profileDropdownOpen
+                        ? "rotate-180"
+                        : ""
+                        }`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -595,11 +674,10 @@ export default function Navbar() {
                     </span>
 
                     <svg
-                      className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                        mobileProfileOpen
-                          ? "rotate-180"
-                          : ""
-                      }`}
+                      className={`h-3.5 w-3.5 transition-transform duration-200 ${mobileProfileOpen
+                        ? "rotate-180"
+                        : ""
+                        }`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -679,19 +757,74 @@ export default function Navbar() {
               )}
 
               {/* NAV LINKS */}
+              {/* NAV LINKS */}
               <nav className="flex flex-1 flex-col py-3">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() =>
-                      setMobileOpen(false)
-                    }
-                    className="flex items-center px-5 py-4 text-[15px] font-medium text-[#111827] transition hover:bg-[#f8f5f0] hover:text-[#c9a96e]"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                {navLinks.map((link: any) =>
+                  link.dropdown ? (
+                    <div key={link.name}>
+                      <button
+                        onClick={() =>
+                          setMobileDropdown((prev) =>
+                            prev === link.name ? null : link.name
+                          )
+                        }
+                        className="flex w-full items-center justify-between px-5 py-4 text-[15px] font-medium text-[#111827] transition hover:bg-[#f8f5f0] hover:text-[#c9a96e]"
+                      >
+                        <span>{link.name}</span>
+                        <svg
+                          className={`h-4 w-4 transition-transform duration-200 ${mobileDropdown === link.name ? "rotate-180" : ""
+                            }`}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+
+                      <AnimatePresence>
+                        {mobileDropdown === link.name && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22 }}
+                            className="overflow-hidden bg-[#f8f5f0]"
+                          >
+                            {link.dropdown.map((item: any) => (
+                              <Link
+                                key={item.name}
+                                href={item.href}
+                                onClick={() => {
+                                  setMobileOpen(false);
+                                  setMobileDropdown(null);
+                                }}
+                                className="flex items-center gap-2 border-t border-gray-200 px-8 py-3 text-[14px] font-medium text-[#444] transition hover:text-[#c9a96e]"
+                              >
+                                <span className="h-1 w-1 rounded-full bg-[#c9a96e]" />
+                                {item.name}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center px-5 py-4 text-[15px] font-medium text-[#111827] transition hover:bg-[#f8f5f0] hover:text-[#c9a96e]"
+                    >
+                      {link.name}
+                    </Link>
+                  )
+                )}
               </nav>
             </motion.div>
           </>

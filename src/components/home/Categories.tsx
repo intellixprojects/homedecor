@@ -8,27 +8,39 @@ import { useRouter } from "next/navigation";
 const categories = [
   {
     id: 1,
-    title: "Artisan Ceramic Vases",
+    title: "Artisan Vases",
     image: "/images/Vases/Vase1.jpeg",
     slug: "vases",
   },
   {
     id: 2,
-    title: "Elegant Showpieces",
+    title: "Luxury Showpieces",
     image: "/images/showpieces/showpiece1.jpeg",
     slug: "showpieces",
   },
   {
     id: 3,
-    title: "Luxury Wall Decor",
-    image: "/images/walldecor/walldecor1.jpeg",
-    slug: "wall-decor",
-  },
-  {
-    id: 4,
     title: "Handcrafted Idols",
     image: "/images/Idols/idols1.jpeg",
     slug: "idols",
+  },
+  {
+    id: 4,
+    title: "Ganesh Collection",
+    image: "/images/ganesh/ganesh1.jpeg",
+    slug: "ganesh",
+  },
+  {
+    id: 5,
+    title: "Buddha & Monk",
+    image: "/images/monk/monk1.jpeg",
+    slug: "buddha-monk",
+  },
+  {
+    id: 6,
+    title: "Luxury Sculptures",
+    image: "/images/panther/panther1.jpeg",
+    slug: "luxury-sculptures",
   },
 ];
 
@@ -71,7 +83,7 @@ export default function Categories() {
                 margin: 0,
               }}
             >
-              Collections
+              Luxury • Spiritual • Handcrafted
             </p>
 
             <span className="block w-10 h-[1px] bg-[#b8a07a]" />
@@ -87,13 +99,25 @@ export default function Categories() {
               margin: 0,
             }}
           >
-            Shop By{" "}
-            <em className="italic font-semibold">Category</em>
+            Explore Our{" "}
+            <em className="italic font-semibold">Collections</em>
           </h2>
+
+          <p
+            className="text-[#6b6258] max-w-2xl mx-auto mt-5"
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.8",
+            }}
+          >
+            Discover luxury decor, spiritual idols, handcrafted
+            sculptures and timeless pieces curated to elevate every
+            corner of your home.
+          </p>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((item, index) => (
             <motion.div
               key={item.id}
@@ -107,7 +131,7 @@ export default function Categories() {
               viewport={{ once: true }}
               whileHover="hover"
               className="relative overflow-hidden rounded-md cursor-pointer aspect-[3/4] group"
-            > 
+            >
 
               {/* Image */}
               <motion.div
@@ -142,18 +166,6 @@ export default function Categories() {
                 className="absolute bottom-0 left-0 right-0 z-[3]"
                 style={{ padding: "32px 28px" }}
               >
-                {/* Number */}
-                <p
-                  className="text-[#b8a07a]"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', Georgia, serif",
-                    fontSize: "12px",
-                    letterSpacing: "3px",
-                    margin: "0 0 8px 0",
-                  }}
-                >
-                  0{item.id}
-                </p>
 
                 {/* Title */}
                 <h3
@@ -177,7 +189,7 @@ export default function Categories() {
                   <div className="flex-1 h-[1px] bg-white/20" />
 
                   <motion.button
-                   onClick={() => router.push(`/products?category=${item.slug}`)}
+                    onClick={() => router.push(`/products?category=${item.slug}`)}
                     variants={{
                       hover: {
                         backgroundColor: "#b8a07a",

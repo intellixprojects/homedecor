@@ -1,4 +1,23 @@
-export const products = [
+export type Product = {
+  id: number;
+  slug: string;
+  title: string;
+  category: string;
+  price: number;
+  oldPrice: number;
+  rating: number;
+  reviews: number;
+  stock: boolean;
+  inStock: boolean;
+  width?: string;
+  height?: string;
+  image: string;
+  gallery: string[];
+  description: string;
+  features: string[];
+};
+
+export const products: Product[] = [
   {
     id: 1,
     slug: "fist-bump-couple-sculpture",
@@ -9,6 +28,9 @@ export const products = [
     rating: 4.8,
     reviews: 124,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/showpieces/showpiece2.png",
     gallery: [
       "/images/showpieces/showpiece2.png",
@@ -35,6 +57,9 @@ export const products = [
     rating: 4.7,
     reviews: 96,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/Idols/idols2.png",
     gallery: [
       "/images/Idols/idols2.png",
@@ -62,6 +87,9 @@ export const products = [
     rating: 4.9,
     reviews: 142,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/Vases/Vase2.jpeg",
     gallery: [
       "/images/Vases/vase2.jpeg",
@@ -89,6 +117,9 @@ export const products = [
     rating: 4.8,
     reviews: 88,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/showpieces/showpiece3.png",
     gallery: [
       "/images/showpieces/showpiece3.png",
@@ -116,6 +147,9 @@ export const products = [
     rating: 4.7,
     reviews: 103,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/Vases/Vase3.png",
     gallery: [
       "/images/Vases/Vase3.png",
@@ -143,6 +177,9 @@ export const products = [
     rating: 4.6,
     reviews: 65,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/Idols/idols3.png",
     gallery: [
       "/images/Idols/idols3.png",
@@ -170,12 +207,15 @@ export const products = [
     rating: 4.7,
     reviews: 91,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/Vases/Vase4.png",
     gallery: [
       "/images/Vases/Vase4.png",
-      "/images/product7.jpg",
-      "/images/product7.jpg",
-      "/images/product7.jpg",
+      "/images/Vases/Vase4.1.png",
+      "/images/Vases/Vase4.2.png",
+      "/images/Vases/Vase4.3.png",
     ],
     description:
       "S-shaped vase with 3 openings, hand-painted cherries, strawberries and hearts. Playful design.",
@@ -197,12 +237,14 @@ export const products = [
     rating: 4.9,
     reviews: 171,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/showpieces/showpiece4.png",
     gallery: [
       "/images/showpieces/showpiece4.png",
-      "/images/product8.jpg",
-      "/images/product8.jpg",
-      "/images/product8.jpg",
+      "/images/showpieces/showpiece4.1.png",
+      "/images/showpieces/showpiece4.2.png",
     ],
     description:
       "Red and black abstract ceramic dancing couple in passionate tango pose. Romantic decor.",
@@ -224,6 +266,9 @@ export const products = [
     rating: 4.8,
     reviews: 132,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product9.jpg",
     gallery: [
       "/images/product9.jpg",
@@ -251,6 +296,9 @@ export const products = [
     rating: 4.9,
     reviews: 214,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product10.jpg",
     gallery: [
       "/images/product10.jpg",
@@ -278,6 +326,9 @@ export const products = [
     rating: 4.6,
     reviews: 74,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product11.jpg",
     gallery: [
       "/images/product11.jpg",
@@ -305,6 +356,9 @@ export const products = [
     rating: 4.7,
     reviews: 98,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product12.jpg",
     gallery: [
       "/images/product12.jpg",
@@ -332,6 +386,9 @@ export const products = [
     rating: 4.8,
     reviews: 116,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product13.jpg",
     gallery: [
       "/images/product13.jpg",
@@ -359,6 +416,9 @@ export const products = [
     rating: 4.9,
     reviews: 143,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product14.jpg",
     gallery: [
       "/images/product14.jpg",
@@ -386,6 +446,9 @@ export const products = [
     rating: 4.7,
     reviews: 87,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product15.jpg",
     gallery: [
       "/images/product15.jpg",
@@ -413,6 +476,9 @@ export const products = [
     rating: 4.6,
     reviews: 69,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product16.jpg",
     gallery: [
       "/images/product16.jpg",
@@ -440,6 +506,9 @@ export const products = [
     rating: 4.8,
     reviews: 124,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product17.jpg",
     gallery: [
       "/images/product17.jpg",
@@ -467,6 +536,9 @@ export const products = [
     rating: 4.9,
     reviews: 156,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product18.jpg",
     gallery: [
       "/images/product18.jpg",
@@ -494,6 +566,9 @@ export const products = [
     rating: 4.8,
     reviews: 111,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product19.jpg",
     gallery: [
       "/images/product19.jpg",
@@ -521,6 +596,9 @@ export const products = [
     rating: 5.0,
     reviews: 203,
     stock: true,
+    inStock: true,
+    width: "",
+    height: "",
     image: "/images/product20.jpg",
     gallery: [
       "/images/product20.jpg",

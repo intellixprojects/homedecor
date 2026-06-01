@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   return (
     <section
-      className="relative overflow-hidden bg-cover bg-center bg-no-repeat min-h-[88vh] flex items-center"
+      className="relative overflow-hidden bg-cover bg-center bg-no-repeat min-h-screen flex items-center"
       style={{
         backgroundImage:
           "url('https://plus.unsplash.com/premium_photo-1681412205156-bb506a4ea970?q=80&w=1400&auto=format&fit=crop')",
@@ -34,30 +34,30 @@ export default function Hero() {
               <span className="w-8 h-px bg-[#d6bfa7]" />
 
               <p className="uppercase tracking-[4px] text-[10px] sm:text-xs text-[#d6bfa7] font-semibold">
-                Luxury Home Decor
+                Luxury & Spiritual Decor
               </p>
 
               <span className="w-8 h-px bg-[#d6bfa7]" />
             </div>
 
             {/* Heading */}
-            <h1 className="text-white font-black leading-[1.05] text-4xl sm:text-5xl md:text-6xl lg:text-[64px] max-w-2xl mx-auto lg:mx-0">
-              Elegant Living
+            <h1 className="text-white font-black leading-[1.05] text-3xl sm:text-4xl md:text-5xl lg:text-[56px] max-w-xl mx-auto lg:mx-0">
+              Luxury Meets
 
               <span className="block text-[#e7d9c9] mt-1">
-                Crafted With
+                Spirituality
               </span>
 
               <span className="block text-[#e7d9c9]">
-                Timeless Style
+                For Modern Homes
               </span>
             </h1>
 
             {/* Description */}
             <p className="mt-6 text-sm sm:text-base lg:text-lg leading-7 sm:leading-8 text-white/75 max-w-xl mx-auto lg:mx-0">
-              Discover handcrafted ceramic decor, luxury wall art,
-              elegant idols, marble dust creations, and timeless
-              pieces designed to elevate modern interiors.
+              Discover handcrafted decor, divine idols, luxury sculptures,
+              wall art and timeless pieces designed to bring elegance,
+              positivity and style to every corner of your home.
             </p>
 
             {/* Buttons */}
@@ -75,8 +75,8 @@ export default function Hero() {
             <div className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-8">
               {[
                 { number: "50+", label: "Curated Products" },
-                { number: "Handmade", label: "Craftsmanship" },
-                { number: "Premium", label: "Home Styling" },
+                { number: "Spiritual", label: "Collection" },
+                { number: "Premium", label: "Decor Pieces" },
               ].map((item, index) => (
                 <div key={index}>
                   <h3 className="text-white text-2xl sm:text-3xl font-bold">
@@ -117,12 +117,12 @@ export default function Hero() {
             <motion.div
               animate={{ y: [0, 15, 0] }}
               transition={{ duration: 5, repeat: Infinity }}
-              className="absolute top-0 right-8 z-20"
+              className="absolute top-0 right-8 z-20 "
             >
               <Image
-                src="/images/hero2.jpeg"
+                src="/images/buddha/buddha1.png"
                 alt="Decor"
-                width={180}
+                width={190}
                 height={220}
                 className="rounded-[28px] object-cover shadow-xl border border-white/10"
               />
@@ -132,12 +132,12 @@ export default function Hero() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity }}
-              className="absolute bottom-6 left-4 z-10"
+              className="absolute bottom-6 left-4 z-10 mb-5"
             >
               <Image
-                src="/images/hero3.jpeg"
+                src="/images/monk/monk1.jpeg"
                 alt="Decor"
-                width={210}
+                width={190}
                 height={250}
                 className="rounded-[28px] object-cover shadow-xl border border-white/10"
               />
