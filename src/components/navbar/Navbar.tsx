@@ -219,7 +219,7 @@ export default function Navbar() {
 
     setMobileOpen(false);
 
-    router.push("/");
+    router.push("/login");
   };
 
   return (

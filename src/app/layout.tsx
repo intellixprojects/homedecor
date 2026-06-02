@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import ReduxProvider from "@/providers/ReduxProvider";
 import ProductsInitializer from "@/components/ProductsInitializer";
+import AuthInitializer from "@/components/AuthInitializer";
 
 import { Poppins, Playfair_Display } from "next/font/google";
 
@@ -35,6 +36,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${playfair.variable}`}
       >
         <ReduxProvider>
+          <AuthInitializer />
           <ProductsInitializer />
         {children}
         </ReduxProvider>

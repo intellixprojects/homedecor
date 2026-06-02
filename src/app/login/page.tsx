@@ -31,49 +31,59 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-
+  const handleLogin = async () => {
     if (!email || !password) {
       alert("Please fill all fields");
       return;
     }
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const users = JSON.parse(
-      localStorage.getItem("users") || "[]"
-    );
+      const response = await fetch(
+        "/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
-    const matchedUser = users.find(
-      (user: any) =>
-        user.email.toLowerCase() === email.toLowerCase() &&
-        user.password === password
-    );
+      const data = await response.json();
 
-    if (matchedUser) {
+      if (!data.success) {
+        alert(data.message);
+        return;
+      }
 
-      /* REDUX LOGIN */
-      dispatch(
-  login(matchedUser)
-);
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(data.user)
+      );
 
-      /* LOAD USER DATA */
+      dispatch(login(data.user));
+
       dispatch(loadCart());
       dispatch(loadWishlist());
 
       alert("Login Successful");
 
-      /* FIX MOBILE ISSUE */
       setTimeout(() => {
         router.push("/");
         router.refresh();
       }, 300);
 
-    } else {
-      alert("Invalid Email or Password");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -81,7 +91,7 @@ export default function LoginPage() {
       <Navbar />
 
       <section className="min-h-screen overflow-hidden bg-[#f8f5f0]">
-        
+
         <div className="mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-4 pb-16 pt-[110px] sm:px-6 md:gap-14 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:pb-20">
 
           {/* LEFT SIDE */}

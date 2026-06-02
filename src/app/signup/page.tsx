@@ -26,31 +26,43 @@ export default function SignupPage() {
 
   const [password, setPassword] = useState("");
 
-  const handleSignup = (
+  const handleSignup = async (
     e: React.FormEvent
   ) => {
     e.preventDefault();
 
-    const userData = {
-      name,
-      email,
-      password,
-    };
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
 
-    const existingUsers = JSON.parse(
-      localStorage.getItem("users") || "[]"
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      }
     );
 
-    existingUsers.push(userData);
+    const data = await res.json();
 
-    localStorage.setItem(
-      "users",
-      JSON.stringify(existingUsers)
-    );
+    if (!data.success) {
+      alert(data.message || "signup failed. please try again.");
+      return;
+    }
 
-    alert("Account Created Successfully");
+    alert("Account created successfully!");
 
     router.push("/login");
+
+    } catch (error) {
+      console.log("Signup error:", error);
+
+      alert("Something went wrong. please try again.");
+    }
   };
 
   return (
