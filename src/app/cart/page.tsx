@@ -47,7 +47,7 @@ export default function CartPage() {
 
   const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
-  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [removingId, setRemovingId] = useState<string | number | null>(null);
 
   const [showLoginMessage, setShowLoginMessage] = useState(false);
 
@@ -71,7 +71,7 @@ export default function CartPage() {
     (subtotal / 500) * 100
   );
 
-  const handleRemove = (id: number) => {
+  const handleRemove = (id: string | number) => {
     setRemovingId(id);
 
     setTimeout(() => {
