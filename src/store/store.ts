@@ -53,7 +53,7 @@ export const persistor =
   persistStore(store);
 
 export type RootState =
-  ReturnType<typeof store.getState>;
+  ReturnType<typeof rootReducer>;
 
 export type AppDispatch =
   typeof store.dispatch;

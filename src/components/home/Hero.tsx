@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function Hero() {
@@ -62,13 +63,17 @@ export default function Hero() {
 
             {/* Buttons */}
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              <button className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#d6bfa7] text-black text-xs sm:text-sm font-semibold uppercase tracking-[3px] transition-all duration-300 hover:bg-white hover:scale-105">
-                Shop now
-              </button>
+              <Link href="/products">
+                <button className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#d6bfa7] text-black text-xs sm:text-sm font-semibold uppercase tracking-[3px] transition-all duration-300 hover:bg-white hover:scale-105">
+                  Shop now
+                </button>
+              </Link>
 
-              <button className="w-full sm:w-auto px-7 py-3 rounded-full border border-white/40 text-white text-xs sm:text-sm font-semibold uppercase tracking-[3px] hover:bg-white hover:text-black transition-all duration-300">
-                Explore
-              </button>
+              <Link href="/collections">
+                <button className="w-full sm:w-auto px-7 py-3 rounded-full border border-white/40 text-white text-xs sm:text-sm font-semibold uppercase tracking-[3px] hover:bg-white hover:text-black transition-all duration-300">
+                  Explore
+                </button>
+              </Link>
             </div>
 
             {/* Stats */}

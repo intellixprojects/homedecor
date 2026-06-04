@@ -2,46 +2,15 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const categories = [
-  {
-    id: 1,
-    title: "Artisan Vases",
-    image: "/images/Vases/Vase1.jpeg",
-    slug: "vases",
-  },
-  {
-    id: 2,
-    title: "Luxury Showpieces",
-    image: "/images/showpieces/showpiece1.jpeg",
-    slug: "showpieces",
-  },
-  {
-    id: 3,
-    title: "Handcrafted Idols",
-    image: "/images/Idols/idols1.jpeg",
-    slug: "idols",
-  },
-  {
-    id: 4,
-    title: "Divine Collection",
-    image: "/images/ganesh/ganesh1.jpeg",
-    slug: "ganesh",
-  },
-  {
-    id: 5,
-    title: "Buddha & Monk",
-    image: "/images/monk/monk1.jpeg",
-    slug: "buddha-monk",
-  },
-  {
-    id: 6,
-    title: "Luxury Sculptures",
-    image: "/images/panther/panther1.jpeg",
-    slug: "luxury-sculptures",
-  },
+  { id: 4, title: "Divine Collection", image: "/images/ganesh/ganesh1.jpeg", slug: "ganesh" },
+  { id: 5, title: "Buddha & Monk", image: "/images/monk/monk1.jpeg", slug: "buddha-monk" },
+  { id: 6, title: "Luxury Sculptures", image: "/images/panther/panther1.jpeg", slug: "luxury-sculptures" },
+  { id: 1, title: "Artisan Vases", image: "/images/Vases/Vase1.jpeg", slug: "vases" },
+  { id: 2, title: "Luxury Showpieces", image: "/images/showpieces/showpiece1.jpeg", slug: "showpieces" },
+  { id: 3, title: "Handcrafted Idols", image: "/images/Idols/idols1.jpeg", slug: "idols" },
 ];
 
 export default function Categories() {

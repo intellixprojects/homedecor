@@ -26,13 +26,19 @@ import { RootState } from "@/store/store";
 
 interface ProductProps {
   product: {
-    id: number;
+    id?: number;
+    _id?: string;
     title: string;
     category: string;
     price: number;
-    oldPrice: number;
+    oldPrice?: number;
     rating: number;
     image: string;
+    inStock?: boolean;
+    description?: string;
+    gallery?: string[];
+    width?: string;
+    height?: string;
   };
 }
 
@@ -47,14 +53,14 @@ export default function ProductCard({ product }: ProductProps) {
   );
 
   const isWished = wishlistItems.some(
-    (item:ProductProps["product"]) => item.id === product.id
+    (item: any) => item.id === product._id || item.id === product.id
   );
 
   // Add To Cart
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        id: product.id,
+        id: product._id || product._id || "",
         title: product.title,
         price: product.price,
         image: product.image,
@@ -76,15 +82,15 @@ export default function ProductCard({ product }: ProductProps) {
     e.preventDefault();
 
     if (isWished) {
-      dispatch(removeFromWishlist(product.id));
+      dispatch(removeFromWishlist(product._id || product.id || ""));
     } else {
       dispatch(
         addToWishlist({
-          id: product.id,
+          id: product._id || product.id || "",
           title: product.title,
           category: product.category,
           price: product.price,
-          oldPrice: product.oldPrice,
+          oldPrice: product.oldPrice || 0,
           rating: product.rating,
           image: product.image,
         })
@@ -93,9 +99,9 @@ export default function ProductCard({ product }: ProductProps) {
   };
 
   // Discount
-  const discount = Math.round(
-    ((product.oldPrice - product.price) / product.oldPrice) * 100
-  );
+  const discount = product.oldPrice
+    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+    : 0;
 
   return (
     <motion.div
@@ -116,7 +122,7 @@ export default function ProductCard({ product }: ProductProps) {
       >
         {/* IMAGE */}
         <Link
-          href={`/products/${product.id}`}
+          href={`/products/${product._id}`}
           className="block relative overflow-hidden bg-[#f2ede6]"
           style={{ height: "320px" }}
         >
@@ -143,16 +149,14 @@ export default function ProductCard({ product }: ProductProps) {
           {/* Wishlist Button */}
           <button
             onClick={handleWishlist}
-            className={`absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
-              isWished
+            className={`absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${isWished
                 ? "bg-black text-white scale-110"
                 : "bg-white/80 text-gray-600 hover:bg-black hover:text-white"
-            }`}
+              }`}
           >
             <FiHeart
-              className={`text-sm transition-all ${
-                isWished ? "fill-white" : ""
-              }`}
+              className={`text-sm transition-all ${isWished ? "fill-white" : ""
+                }`}
             />
           </button>
 
@@ -190,7 +194,7 @@ export default function ProductCard({ product }: ProductProps) {
           </p>
 
           {/* Title */}
-          <Link href={`/products/${product.id}`}>
+          <Link href={`/products/${product._id}`}>
             <h3
               className="font-bold text-[#1a1714] text-[20px] leading-[1.25] tracking-[-0.3px] group-hover:text-black transition-colors duration-200 line-clamp-2"
               style={{
@@ -227,28 +231,28 @@ export default function ProductCard({ product }: ProductProps) {
                 ₹{product.price}
               </span>
 
-              <span className="text-[14px] text-[#b0a898] line-through">
-                ₹{product.oldPrice}
-              </span>
+              {product.oldPrice && (
+                <span className="text-[14px] text-[#b0a898] line-through">
+                  ₹{product.oldPrice}
+                </span>
+              )}
             </div>
 
             {/* Add To Cart */}
             <motion.button
               whileTap={{ scale: 0.94 }}
               onClick={handleAddToCart}
-              className={`flex items-center gap-[8px] h-[44px] rounded-full text-[13px] font-semibold transition-all duration-300 shadow-sm ${
-                added
+              className={`flex items-center gap-[8px] h-[44px] rounded-full text-[13px] font-semibold transition-all duration-300 shadow-sm ${added
                   ? "bg-[#2d6a4f] text-white"
                   : "bg-black text-white hover:bg-[#2a2420]"
-              }`}
+                }`}
               style={{
                 padding: "0 20px",
               }}
             >
               <FiShoppingBag
-                className={`text-[14px] transition-transform duration-300 ${
-                  added ? "" : "group-hover:rotate-12"
-                }`}
+                className={`text-[14px] transition-transform duration-300 ${added ? "" : "group-hover:rotate-12"
+                  }`}
               />
 
               <AnimatePresence mode="wait">

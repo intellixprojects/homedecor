@@ -5,9 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useDispatch } from "react-redux";
-
-
 import {
   FiTrash2,
   FiPlus,
@@ -39,6 +36,9 @@ export default function AdminProductsPage() {
   const [rating, setRating] = useState(5);
   const [inStock, setInStock] = useState<boolean>(true);
   const [images, setImages] = useState<string[]>(["", "", "", ""]);
+  const [length, setlength] = useState("");
+  const [weight, setWeight] = useState("");
+  const [uploadingIndex, setUploadingIndex] = useState<boolean[]>([false, false, false, false]);
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,7 +49,7 @@ export default function AdminProductsPage() {
   }, []);
 
   const fetchProducts = async () => {
-    const res = await fetch("/api/products");
+    const res = await fetch("/api/products", { cache: "no-store" });
 
     const data = await res.json();
 
@@ -92,6 +92,8 @@ export default function AdminProductsPage() {
     setImages(["", "", "", ""]);
     setEditingId(null);
     setIsEditing(false);
+    setlength("");
+    setWeight("");
   };
 
   // ✅ FIXED: async handleDelete
@@ -139,6 +141,8 @@ export default function AdminProductsPage() {
     setInStock(item.inStock !== false);
     setWidth(item.width || "");
     setHeight(item.height || "");
+    setlength(item.length || "");
+    setWeight(item.weight || "");
     setImages([
       item.gallery?.[0] || "",
       item.gallery?.[1] || "",
@@ -152,43 +156,43 @@ export default function AdminProductsPage() {
     index: number
   ) => {
     const file = e.target.files?.[0];
-
     if (!file) return;
 
+    // ✅ Uploading state set karo
+    const updatedLoading = [...uploadingIndex];
+    updatedLoading[index] = true;
+    setUploadingIndex(updatedLoading);
+
     try {
-      const reader = new FileReader();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => resolve(event.target?.result as string);
+        reader.onerror = () => reject(new Error("File read failed"));
+        reader.readAsDataURL(file);
+      });
 
-      reader.onload = async (event) => {
-        const base64 = event.target?.result as string;
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      });
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            image: base64,
-          }),
-        });
+      const data = await res.json();
 
-        const data = await res.json();
+      if (!data.success) throw new Error("Upload failed");
 
-        if (!data.success) {
-          throw new Error("Upload failed");
-        }
+      const updatedImages = [...images];
+      updatedImages[index] = data.url;
+      setImages(updatedImages);
 
-        const updatedImages = [...images];
-
-        updatedImages[index] = data.url;
-
-        setImages(updatedImages);
-      };
-
-      reader.readAsDataURL(file);
     } catch (error) {
       console.error(error);
-
       alert("Image upload failed");
+    } finally {
+      // ✅ Uploading state hatao
+      const doneLoading = [...uploadingIndex];
+      doneLoading[index] = false;
+      setUploadingIndex(doneLoading);
     }
   };
 
@@ -220,6 +224,8 @@ export default function AdminProductsPage() {
       description,
       width,
       height,
+      length,
+      weight,
     };
 
     try {
@@ -468,13 +474,23 @@ export default function AdminProductsPage() {
                     </div>
 
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      <span className="rounded-full bg-[#111827] px-2.5 py-1 text-[10px] font-semibold text-white">
-                        {item.width}
-                      </span>
-                      <span className="rounded-full bg-[#111827] px-2.5 py-1 text-[10px] font-semibold text-white">
-                        {item.height}
-                      </span>
+                      {item.width && (
+                        <span className="rounded-full bg-[#111827] px-2.5 py-1 text-[10px] font-semibold text-white">
+                          {item.width}
+                        </span>
+                      )}
+                      {item.height && (
+                        <span className="rounded-full bg-[#111827] px-2.5 py-1 text-[10px] font-semibold text-white">
+                          {item.height}
+                        </span>
+                      )}
+                      {item.length && (
+                        <span className="rounded-full bg-[#111827] px-2.5 py-1 text-[10px] font-semibold text-white">
+                          {item.length}
+                        </span>
+                      )}
                     </div>
+
 
                     {item.description && (
                       <p className="mt-3 line-clamp-2 text-[12px] leading-5 text-[#6b7280]">
@@ -580,6 +596,23 @@ export default function AdminProductsPage() {
                   onChange={(e) => setHeight(e.target.value)}
                   className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
                 />
+                <input
+                  type="text"
+                  placeholder="length (Example: 60cm)"
+                  value={length}
+                  onChange={(e) => setlength(e.target.value)}
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <input
+                  type="text"
+                  placeholder="Weight (e.g. 1.2 kg)"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                />
               </div>
 
               {/* STOCK STATUS */}
@@ -627,10 +660,16 @@ export default function AdminProductsPage() {
                         <div className="space-y-3">
                           <div className="relative h-[100px] sm:h-[130px] overflow-hidden rounded-[14px]">
                             <Image src={img} alt="Preview" fill className="object-cover" />
+                            {/* ✅ Uploading overlay */}
+                            {uploadingIndex[index] && (
+                              <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-[14px]">
+                                <p className="text-white text-[11px] font-semibold animate-pulse">Uploading...</p>
+                              </div>
+                            )}
                           </div>
                           <label className="flex h-[38px] sm:h-[40px] cursor-pointer items-center justify-center gap-2 rounded-full bg-[#111827] text-[11px] sm:text-[12px] font-semibold text-white">
                             <FiEdit2 />
-                            Update
+                            {uploadingIndex[index] ? "Uploading..." : "Update"}
                             <input
                               type="file"
                               accept="image/*"
@@ -640,12 +679,24 @@ export default function AdminProductsPage() {
                           </label>
                         </div>
                       ) : (
-                        <label className="flex h-[150px] sm:h-[190px] cursor-pointer flex-col items-center justify-center rounded-[16px] border-2 border-dashed border-[#d1d5db] bg-white text-center">
-                          <FiUpload className="mb-2 sm:mb-3 text-[22px] sm:text-[28px] text-[#9ca3af]" />
-                          <p className="text-[11px] sm:text-[13px] font-semibold text-[#111827]">Upload</p>
-                          <span className="mt-1 text-[10px] sm:text-[11px] text-[#6b7280]">
-                            {index === 3 ? "Optional" : "Required"}
-                          </span>
+                        <label className={`flex h-[150px] sm:h-[190px] cursor-pointer flex-col items-center justify-center rounded-[16px] border-2 border-dashed bg-white text-center transition-all ${uploadingIndex[index] ? "border-[#c9a96e] bg-amber-50" : "border-[#d1d5db]"
+                          }`}>
+                          {uploadingIndex[index] ? (
+                            // Loader
+                            <>
+                              <div className="w-8 h-8 border-2 border-[#c9a96e] border-t-transparent rounded-full animate-spin mb-3" />
+                              <p className="text-[12px] font-semibold text-[#c9a96e]">Uploading...</p>
+                            </>
+                          ) : (
+                            // Normal upload UI
+                            <>
+                              <FiUpload className="mb-2 sm:mb-3 text-[22px] sm:text-[28px] text-[#9ca3af]" />
+                              <p className="text-[11px] sm:text-[13px] font-semibold text-[#111827]">Upload</p>
+                              <span className="mt-1 text-[10px] sm:text-[11px] text-[#6b7280]">
+                                {index === 3 ? "Optional" : "Required"}
+                              </span>
+                            </>
+                          )}
                           <input
                             type="file"
                             accept="image/*"

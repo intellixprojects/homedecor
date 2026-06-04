@@ -56,6 +56,16 @@ const ProductSchema = new Schema(
       type: String,
       default: "",
     },
+
+    length: {
+      type: String,
+      default: "",
+    },
+
+    weight: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

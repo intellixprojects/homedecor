@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface WishlistItem {
-  id: number;
+  id: string | number;
   title: string;
   category: string;
   price: number;
@@ -86,7 +86,7 @@ const wishlistSlice = createSlice({
 
     removeFromWishlist: (
       state,
-      action: PayloadAction<number>
+      action: PayloadAction<string | number>
     ) => {
 
       state.wishlistItems =

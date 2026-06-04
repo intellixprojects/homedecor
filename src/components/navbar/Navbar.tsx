@@ -37,6 +37,20 @@ const navLinks = [
   { name: "Home", href: "/" },
 
   {
+    name: "Spiritual Decor",
+    dropdown: [
+      {
+        name: "Divine Collection",
+        href: "/products?category=divine",
+      },
+      {
+        name: "Buddha & Monk Collection",
+        href: "/products?category=buddha-monk",
+      },
+    ],
+  },
+
+   {
     name: "Home Decor",
     dropdown: [
       {
@@ -51,24 +65,10 @@ const navLinks = [
         name: "Handcraft Idols",
         href: "/products?category=idols",
       },
-    ],
-  },
-
-  {
-    name: "Spiritual Decor",
-    dropdown: [
       {
-        name: "Krishna Collection",
-        href: "/products?category=krishna",
-      },
-      {
-        name: "Buddha & Monk Collection",
-        href: "/products?category=buddha-monk",
-      },
-      {
-        name: "Ganesha Collection",
-        href: "/products?category=ganesh",
-      },
+        name: "Luxury Sculptures",
+        href: "/products?category=luxury-sculptures",
+      }
     ],
   },
 

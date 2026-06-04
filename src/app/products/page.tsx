@@ -17,8 +17,8 @@ import ProductCard from "@/components/products/ProductCard";
 
 import { useSearchParams } from "next/navigation";
 
-import { getProducts, saveProducts } from "@/utils/productStorage";
-import { products as staticProducts } from "@/data/products";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const PRODUCTS_PER_PAGE = 16;
 
@@ -77,19 +77,22 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ✅ FIXED: async getProducts + saveProducts (IndexedDB, no localStorage)
+  // const products = useSelector((state: RootState) => state.products.products);
+
   useEffect(() => {
-    const loadProducts = async () => {
-      const stored = await getProducts();
-      if (!stored || stored.length === 0) {
-        await saveProducts(staticProducts); // ✅ localStorage.setItem hataya
-        setProducts(staticProducts);
-      } else {
-        setProducts(stored);
+  const loadProducts = async () => {
+    try {
+      const res = await fetch("/api/products", { cache: "no-store" });
+      const data = await res.json();
+      if (data.success) {
+        setProducts(data.products);
       }
-    };
-    loadProducts();
-  }, []);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    }
+  };
+  loadProducts();
+}, []);
 
   // CATEGORY FROM URL
   useEffect(() => {
@@ -120,8 +123,6 @@ export default function ProductsPage() {
     "Handcraft Idols",
     "Divine Collection",
     "Buddha & Monk",
-    "Mugs",
-    "Printed Plates",
   ];
 
   // ✅ FIXED: Array.isArray guard taaki .filter kabhi crash na kare
@@ -309,7 +310,7 @@ export default function ProductsPage() {
           {/* PRODUCTS GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
             {paginatedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product._id || product.id} product={product} />
             ))}
           </div>
 

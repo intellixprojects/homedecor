@@ -1,24 +1,17 @@
+// src/components/ProductsInitializer.tsx
 "use client";
 
 import { useEffect } from "react";
-import { products as staticProducts } from "@/data/products";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "@/store/features/productSlice";
+import { AppDispatch } from "@/store/store";
 
 export default function ProductsInitializer() {
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-
-    const existingProducts =
-      localStorage.getItem("products");
-
-    if (!existingProducts) {
-
-      localStorage.setItem(
-        "products",
-        JSON.stringify(staticProducts)
-      );
-    }
-
-  }, []);
+    dispatch(fetchProducts()); // MongoDB se products load karo
+  }, [dispatch]);
 
   return null;
 }
