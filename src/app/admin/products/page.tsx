@@ -18,11 +18,13 @@ import {
   FiSearch,
   FiCheckCircle,
   FiXCircle,
+  FiChevronDown,
 } from "react-icons/fi";
 
 export default function AdminProductsPage() {
 
   const [products, setProducts] = useState<any[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -40,31 +42,39 @@ export default function AdminProductsPage() {
   const [weight, setWeight] = useState("");
   const [uploadingIndex, setUploadingIndex] = useState<boolean[]>([false, false, false, false]);
 
-  // Search & Filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const fetchProducts = async () => {
     const res = await fetch("/api/products", { cache: "no-store" });
-
     const data = await res.json();
-
     if (data.success) {
       setProducts(data.products);
     }
   };
 
-  // All unique categories from products
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/categories", { cache: "no-store" });
+      const data = await res.json();
+      if (data.success) {
+        setCategoryOptions(data.categories.map((c: any) => c.name));
+      }
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
   const allCategories = useMemo(() => {
     const cats = products.map((p) => p.category).filter(Boolean);
     return ["All", ...Array.from(new Set(cats))];
   }, [products]);
 
-  // Filtered products based on search + category
   const filteredProducts = useMemo(() => {
     return products.filter((item) => {
       const matchesSearch =
@@ -96,34 +106,18 @@ export default function AdminProductsPage() {
     setWeight("");
   };
 
-  // ✅ FIXED: async handleDelete
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-
+    const confirmed = window.confirm("Are you sure you want to delete this product?");
     if (!confirmed) return;
 
     try {
-      const res = await fetch(
-        `/api/products/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
+      const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
       const data = await res.json();
-
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-
+      if (!data.success) throw new Error(data.message);
       await fetchProducts();
-
       alert("Product deleted successfully");
     } catch (error) {
       console.error(error);
-
       alert("Failed to delete product");
     }
   };
@@ -158,7 +152,6 @@ export default function AdminProductsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // ✅ Uploading state set karo
     const updatedLoading = [...uploadingIndex];
     updatedLoading[index] = true;
     setUploadingIndex(updatedLoading);
@@ -178,7 +171,6 @@ export default function AdminProductsPage() {
       });
 
       const data = await res.json();
-
       if (!data.success) throw new Error("Upload failed");
 
       const updatedImages = [...images];
@@ -189,26 +181,15 @@ export default function AdminProductsPage() {
       console.error(error);
       alert("Image upload failed");
     } finally {
-      // ✅ Uploading state hatao
       const doneLoading = [...uploadingIndex];
       doneLoading[index] = false;
       setUploadingIndex(doneLoading);
     }
   };
 
-  // ✅ FIXED: async handleAddOrUpdateProduct
   const handleAddOrUpdateProduct = async () => {
-    if (
-      !title ||
-      !category ||
-      !price ||
-      !images[0] ||
-      !images[1] ||
-      !images[2]
-    ) {
-      alert(
-        "Please fill all required fields & upload minimum 3 images"
-      );
+    if (!title || !category || !price || !images[0] || !images[1] || !images[2]) {
+      alert("Please fill all required fields & upload minimum 3 images");
       return;
     }
 
@@ -229,37 +210,22 @@ export default function AdminProductsPage() {
     };
 
     try {
-      const url = isEditing
-        ? `/api/products/${editingId}`
-        : "/api/products";
-
+      const url = isEditing ? `/api/products/${editingId}` : "/api/products";
       const method = isEditing ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productData),
       });
 
       const data = await res.json();
-
-      if (!data.success) {
-        throw new Error("Failed to save product");
-      }
+      if (!data.success) throw new Error("Failed to save product");
 
       await fetchProducts();
-
       resetForm();
-
       setOpenModal(false);
-
-      alert(
-        isEditing
-          ? "Product updated successfully"
-          : "Product added successfully"
-      );
+      alert(isEditing ? "Product updated successfully" : "Product added successfully");
     } catch (error) {
       console.error(error);
       alert("Failed to add product");
@@ -338,7 +304,6 @@ export default function AdminProductsPage() {
               </p>
             </div>
 
-            {/* SEARCH BAR */}
             <div className="relative w-full sm:w-[280px]">
               <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[16px]" />
               <input
@@ -401,7 +366,6 @@ export default function AdminProductsPage() {
                 key={item._id}
                 className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[#eef0f3] bg-white transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
               >
-                {/* EDIT BUTTON */}
                 <button
                   onClick={() => handleEdit(item)}
                   className="absolute right-2.5 top-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full border border-white/40 bg-white/70 text-[14px] text-[#111827] shadow backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-[#111827] hover:text-white"
@@ -409,7 +373,6 @@ export default function AdminProductsPage() {
                   <FiEdit2 />
                 </button>
 
-                {/* IN STOCK / OUT OF STOCK BADGE */}
                 <div className="absolute left-2.5 top-2.5 z-20">
                   {item.inStock !== false ? (
                     <span className="flex items-center gap-1 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold text-white shadow">
@@ -424,18 +387,15 @@ export default function AdminProductsPage() {
                   )}
                 </div>
 
-                {/* IMAGE */}
                 <div className="relative h-[180px] w-full overflow-hidden bg-[#f3f4f6]">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
-                    className={`object-cover transition-transform duration-700 group-hover:scale-105 ${item.inStock === false ? "opacity-60 grayscale" : ""
-                      }`}
+                    className={`object-cover transition-transform duration-700 group-hover:scale-105 ${item.inStock === false ? "opacity-60 grayscale" : ""}`}
                   />
                 </div>
 
-                {/* CONTENT */}
                 <div className="flex flex-1 flex-col justify-between p-4">
                   <div>
                     <div className="inline-flex rounded-full bg-[#f3f4f6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[1.5px] text-[#6b7280]">
@@ -452,10 +412,7 @@ export default function AdminProductsPage() {
                         {Array.from({ length: 5 }).map((_, i) => (
                           <FiStar
                             key={i}
-                            className={`text-[12px] ${i < item.rating
-                              ? "fill-[#f59e0b] text-[#f59e0b]"
-                              : "text-[#d1d5db]"
-                              }`}
+                            className={`text-[12px] ${i < item.rating ? "fill-[#f59e0b] text-[#f59e0b]" : "text-[#d1d5db]"}`}
                           />
                         ))}
                       </div>
@@ -491,7 +448,6 @@ export default function AdminProductsPage() {
                       )}
                     </div>
 
-
                     {item.description && (
                       <p className="mt-3 line-clamp-2 text-[12px] leading-5 text-[#6b7280]">
                         {item.description}
@@ -499,7 +455,6 @@ export default function AdminProductsPage() {
                     )}
                   </div>
 
-                  {/* ACTIONS */}
                   <div className="mt-4 flex gap-2">
                     <Link
                       href={`/products/${item._id}`}
@@ -532,7 +487,6 @@ export default function AdminProductsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4 backdrop-blur-sm">
           <div className="relative max-h-[95vh] w-full max-w-4xl overflow-y-auto rounded-[26px] sm:rounded-[32px] bg-white p-4 sm:p-6 shadow-2xl lg:p-8">
 
-            {/* CLOSE */}
             <button
               onClick={() => setOpenModal(false)}
               className="absolute right-4 top-4 sm:right-5 sm:top-5 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#f3f4f6] text-[18px] sm:text-[20px] text-[#111827]"
@@ -540,7 +494,6 @@ export default function AdminProductsPage() {
               <FiX />
             </button>
 
-            {/* HEADER */}
             <div className="mb-8">
               <h2 className="text-[28px] sm:text-[34px] font-black text-[#111827]">
                 {isEditing ? "Edit Product" : "Add Product"}
@@ -548,70 +501,78 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="space-y-5">
+
+              {/* TITLE */}
               <input
                 type="text"
                 placeholder="Product Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="h-[56px] sm:h-[58px] w-full rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                className="h-[56px] sm:h-[58px] w-full rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
               />
 
-              <input
-                type="text"
-                placeholder="Category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="h-[56px] sm:h-[58px] w-full rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
-              />
+              {/* CATEGORY DROPDOWN */}
+              <div className="relative">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="h-[56px] sm:h-[58px] w-full appearance-none rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none text-[#111827] cursor-pointer focus:border-[#111827] transition-colors"
+                >
+                  <option value="">Select Category</option>
+                  {categoryOptions.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+                <FiChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-[#9ca3af] pointer-events-none" />
+              </div>
 
+              {/* PRICE */}
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <input
                   type="number"
                   placeholder="Price"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
                 />
                 <input
                   type="number"
                   placeholder="Old Price"
                   value={oldPrice}
                   onChange={(e) => setOldPrice(e.target.value)}
-                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
                 />
               </div>
 
+              {/* DIMENSIONS */}
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <input
                   type="text"
                   placeholder="Width (Example: 120cm)"
                   value={width}
                   onChange={(e) => setWidth(e.target.value)}
-                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
                 />
                 <input
                   type="text"
                   placeholder="Height (Example: 80cm)"
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
-                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
                 />
                 <input
                   type="text"
-                  placeholder="length (Example: 60cm)"
+                  placeholder="Length (Example: 60cm)"
                   value={length}
                   onChange={(e) => setlength(e.target.value)}
-                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
                 />
-              </div>
-
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <input
                   type="text"
                   placeholder="Weight (e.g. 1.2 kg)"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none"
+                  className="h-[56px] sm:h-[58px] rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-5 outline-none focus:border-[#111827] transition-colors"
                 />
               </div>
 
@@ -624,20 +585,17 @@ export default function AdminProductsPage() {
                     onClick={() => setInStock(true)}
                     className={`flex h-[56px] items-center justify-center gap-2.5 rounded-2xl border text-[14px] font-semibold transition-all duration-200 ${inStock
                       ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                      : "border-[#e5e7eb] bg-[#fafafa] text-[#6b7280] hover:border-emerald-300 hover:bg-emerald-50/50"
-                      }`}
+                      : "border-[#e5e7eb] bg-[#fafafa] text-[#6b7280] hover:border-emerald-300 hover:bg-emerald-50/50"}`}
                   >
                     <FiCheckCircle className={`text-[18px] ${inStock ? "text-emerald-500" : "text-[#9ca3af]"}`} />
                     In Stock
                   </button>
-
                   <button
                     type="button"
                     onClick={() => setInStock(false)}
                     className={`flex h-[56px] items-center justify-center gap-2.5 rounded-2xl border text-[14px] font-semibold transition-all duration-200 ${!inStock
                       ? "border-red-400 bg-red-50 text-red-600"
-                      : "border-[#e5e7eb] bg-[#fafafa] text-[#6b7280] hover:border-red-300 hover:bg-red-50/50"
-                      }`}
+                      : "border-[#e5e7eb] bg-[#fafafa] text-[#6b7280] hover:border-red-300 hover:bg-red-50/50"}`}
                   >
                     <FiXCircle className={`text-[18px] ${!inStock ? "text-red-400" : "text-[#9ca3af]"}`} />
                     Out of Stock
@@ -660,7 +618,6 @@ export default function AdminProductsPage() {
                         <div className="space-y-3">
                           <div className="relative h-[100px] sm:h-[130px] overflow-hidden rounded-[14px]">
                             <Image src={img} alt="Preview" fill className="object-cover" />
-                            {/* ✅ Uploading overlay */}
                             {uploadingIndex[index] && (
                               <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-[14px]">
                                 <p className="text-white text-[11px] font-semibold animate-pulse">Uploading...</p>
@@ -679,16 +636,13 @@ export default function AdminProductsPage() {
                           </label>
                         </div>
                       ) : (
-                        <label className={`flex h-[150px] sm:h-[190px] cursor-pointer flex-col items-center justify-center rounded-[16px] border-2 border-dashed bg-white text-center transition-all ${uploadingIndex[index] ? "border-[#c9a96e] bg-amber-50" : "border-[#d1d5db]"
-                          }`}>
+                        <label className={`flex h-[150px] sm:h-[190px] cursor-pointer flex-col items-center justify-center rounded-[16px] border-2 border-dashed bg-white text-center transition-all ${uploadingIndex[index] ? "border-[#c9a96e] bg-amber-50" : "border-[#d1d5db]"}`}>
                           {uploadingIndex[index] ? (
-                            // Loader
                             <>
                               <div className="w-8 h-8 border-2 border-[#c9a96e] border-t-transparent rounded-full animate-spin mb-3" />
                               <p className="text-[12px] font-semibold text-[#c9a96e]">Uploading...</p>
                             </>
                           ) : (
-                            // Normal upload UI
                             <>
                               <FiUpload className="mb-2 sm:mb-3 text-[22px] sm:text-[28px] text-[#9ca3af]" />
                               <p className="text-[11px] sm:text-[13px] font-semibold text-[#111827]">Upload</p>
@@ -710,11 +664,12 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
+              {/* DESCRIPTION */}
               <textarea
                 placeholder="Product Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="h-[150px] sm:h-[160px] w-full resize-none rounded-2xl border border-[#e5e7eb] bg-[#fafafa] p-5 outline-none"
+                className="h-[150px] sm:h-[160px] w-full resize-none rounded-2xl border border-[#e5e7eb] bg-[#fafafa] p-5 outline-none focus:border-[#111827] transition-colors"
               />
 
               {/* BUTTONS */}

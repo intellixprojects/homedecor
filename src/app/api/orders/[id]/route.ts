@@ -4,10 +4,11 @@ import Order from "@/models/Order";
 import User from "@/models/User";
 
 // GET SINGLE ORDER
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
-    const order = await Order.findById(params.id);
+    const { id } = await params;
+    const order = await Order.findById(id);
     if (!order) return NextResponse.json({ success: false, error: "Order not found" });
     return NextResponse.json({ success: true, order });
   } catch (error) {
@@ -16,27 +17,22 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 }
 
 // UPDATE ORDER STATUS
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
-
+    const { id } = await params;
     const { status } = await req.json();
 
-    const existingOrder = await Order.findById(params.id);
+    const existingOrder = await Order.findById(id);
     if (!existingOrder) {
       return NextResponse.json({ success: false, error: "Order not found" });
     }
 
-    // If cancelling, decrement user's orders count and spent amount
+    // If cancelling, decrement user stats
     if (status === "Cancelled" && existingOrder.status !== "Cancelled") {
       await User.findOneAndUpdate(
         { email: existingOrder.userEmail },
-        {
-          $inc: {
-            orders: -1,
-            spent: -existingOrder.totalAmount,
-          },
-        }
+        { $inc: { orders: -1, spent: -existingOrder.totalAmount } }
       );
     }
 
@@ -44,17 +40,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     if (status !== "Cancelled" && existingOrder.status === "Cancelled") {
       await User.findOneAndUpdate(
         { email: existingOrder.userEmail },
-        {
-          $inc: {
-            orders: 1,
-            spent: existingOrder.totalAmount,
-          },
-        }
+        { $inc: { orders: 1, spent: existingOrder.totalAmount } }
       );
     }
 
     const order = await Order.findByIdAndUpdate(
-      params.id,
+      id,
       { status },
       { new: true }
     );
@@ -66,27 +57,22 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 }
 
 // DELETE ORDER
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const existingOrder = await Order.findById(params.id);
+    const existingOrder = await Order.findById(id);
 
-    // If deleting a non-cancelled order, decrement user stats too
+    // If deleting a non-cancelled order, decrement user stats
     if (existingOrder && existingOrder.status !== "Cancelled") {
       await User.findOneAndUpdate(
         { email: existingOrder.userEmail },
-        {
-          $inc: {
-            orders: -1,
-            spent: -existingOrder.totalAmount,
-          },
-        }
+        { $inc: { orders: -1, spent: -existingOrder.totalAmount } }
       );
     }
 
-    await Order.findByIdAndDelete(params.id);
-
+    await Order.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error: String(error) });

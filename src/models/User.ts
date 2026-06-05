@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema(
 
     state: {
       type: String,
-      default: "",
+      default: "Active",
     },
 
     zip: {

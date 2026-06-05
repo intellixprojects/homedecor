@@ -17,9 +17,6 @@ import ProductCard from "@/components/products/ProductCard";
 
 import { useSearchParams } from "next/navigation";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-
 const PRODUCTS_PER_PAGE = 16;
 
 const fadeUp = {
@@ -60,39 +57,49 @@ const slideLeft = {
   }),
 };
 
-const stats = [
-  { n: "240+", l: "Products curated" },
-  { n: "7", l: "Design categories" },
-  { n: "4.9★", l: "Average rating" },
-  { n: "12K+", l: "Happy customers" },
-];
-
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const categoryFromURL = searchParams?.get("category");
 
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>(["All"]);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // const products = useSelector((state: RootState) => state.products.products);
-
+  // FETCH PRODUCTS
   useEffect(() => {
-  const loadProducts = async () => {
-    try {
-      const res = await fetch("/api/products", { cache: "no-store" });
-      const data = await res.json();
-      if (data.success) {
-        setProducts(data.products);
+    const loadProducts = async () => {
+      try {
+        const res = await fetch("/api/products", { cache: "no-store" });
+        const data = await res.json();
+        if (data.success) {
+          setProducts(data.products);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
       }
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-    }
-  };
-  loadProducts();
-}, []);
+    };
+    loadProducts();
+  }, []);
+
+  // FETCH CATEGORIES FROM MongoDB
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const res = await fetch("/api/categories", { cache: "no-store" });
+        const data = await res.json();
+        if (data.success && data.categories.length > 0) {
+          const names = data.categories.map((c: any) => c.name);
+          setCategories(["All", ...names]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    loadCategories();
+  }, []);
 
   // CATEGORY FROM URL
   useEffect(() => {
@@ -110,22 +117,14 @@ export default function ProductsPage() {
           ? "Luxury Sculptures"
           : categoryFromURL === "divine"
           ? "Divine Collection"
+          : categoryFromURL === "ganesh"
+          ? "Divine Collection"
           : "All";
       setSelectedCategory(formattedCategory);
     }
   }, [categoryFromURL]);
 
-  const categories = [
-    "All",
-    "Vases",
-    "Showpieces",
-    "Luxury Sculptures",
-    "Handcraft Idols",
-    "Divine Collection",
-    "Buddha & Monk",
-  ];
-
-  // ✅ FIXED: Array.isArray guard taaki .filter kabhi crash na kare
+  // FILTERED PRODUCTS
   const filteredProducts = useMemo(() => {
     if (!Array.isArray(products)) return [];
 
@@ -286,7 +285,7 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            {/* CATEGORY */}
+            {/* CATEGORIES */}
             <div className="flex flex-wrap items-center gap-2">
               {categories.map((cat) => (
                 <button
@@ -337,7 +336,7 @@ export default function ProductsPage() {
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-[12px] px-4 border border-black/10 bg-white"
+                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-[12px] px-4 border border-black/10 bg-white disabled:opacity-50"
               >
                 <FiChevronLeft size={16} />
                 Prev
@@ -364,7 +363,7 @@ export default function ProductsPage() {
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-[12px] px-4 border border-black/10 bg-white"
+                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-[12px] px-4 border border-black/10 bg-white disabled:opacity-50"
               >
                 Next
                 <FiChevronRight size={16} />
