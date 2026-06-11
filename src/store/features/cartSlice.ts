@@ -6,6 +6,7 @@ interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  stock?: number | null;
 }
 
 interface CartState {
@@ -13,18 +14,10 @@ interface CartState {
 }
 
 const getCartItems = () => {
-
   if (typeof window === "undefined") return [];
-
-  const currentUser = JSON.parse(
-    localStorage.getItem("currentUser") || "null"
-  );
-
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
   if (!currentUser) return [];
-
-  return JSON.parse(
-    localStorage.getItem(`cart_${currentUser.email}`) || "[]"
-  );
+  return JSON.parse(localStorage.getItem(`cart_${currentUser.email}`) || "[]");
 };
 
 const initialState: CartState = {
@@ -32,28 +25,17 @@ const initialState: CartState = {
 };
 
 const saveCart = (cartItems: CartItem[]) => {
-
   if (typeof window === "undefined") return;
-
-  const currentUser = JSON.parse(
-    localStorage.getItem("currentUser") || "null"
-  );
-
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
   if (!currentUser) return;
-
-  localStorage.setItem(
-    `cart_${currentUser.email}`,
-    JSON.stringify(cartItems)
-  );
+  const plainItems = JSON.parse(JSON.stringify(cartItems));
+  localStorage.setItem(`cart_${currentUser.email}`, JSON.stringify(plainItems));
 };
 
 const cartSlice = createSlice({
   name: "cart",
-
   initialState,
-
   reducers: {
-
     loadCart: (state) => {
       state.cartItems = getCartItems();
     },
@@ -62,72 +44,42 @@ const cartSlice = createSlice({
       state.cartItems = [];
     },
 
-    addToCart: (
-      state,
-      action: PayloadAction<CartItem>
-    ) => {
-
-      const existingItem = state.cartItems.find(
-        (item) => item.id === action.payload.id
-      );
-
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      const existingItem = state.cartItems.find((item) => item.id === action.payload.id);
       if (existingItem) {
+        // stock check on add
+        if (existingItem.stock != null && existingItem.quantity >= existingItem.stock) return;
         existingItem.quantity += action.payload.quantity;
       } else {
         state.cartItems.push(action.payload);
       }
-
       saveCart(state.cartItems);
     },
 
-    removeFromCart: (
-      state,
-      action: PayloadAction<string | number>
-    ) => {
-
-      state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
-      );
-
+    removeFromCart: (state, action: PayloadAction<string | number>) => {
+      state.cartItems = state.cartItems.filter((item) => item.id !== action.payload);
       saveCart(state.cartItems);
     },
 
     clearCart: (state) => {
-
       state.cartItems = [];
-
       saveCart([]);
     },
 
-    increaseQuantity: (
-      state,
-      action: PayloadAction<string | number>
-    ) => {
-
-      const item = state.cartItems.find(
-        (item) => item.id === action.payload
-      );
-
+    increaseQuantity: (state, action: PayloadAction<string | number>) => {
+      const item = state.cartItems.find((item) => item.id === action.payload);
       if (item) {
+        if (item.stock != null && item.quantity >= item.stock) return;
         item.quantity += 1;
       }
-
       saveCart(state.cartItems);
     },
 
-    decreaseQuantity: (
-      state,
-      action: PayloadAction<string | number>
-    ) => {
-
-      const item = state.cartItems.find(
-        (item) => item.id === action.payload
-      );
-
+    decreaseQuantity: (state, action: PayloadAction<string | number>) => {
+      const item = state.cartItems.find((item) => item.id === action.payload);
       if (item && item.quantity > 1) {
         item.quantity -= 1;
       }
-
       saveCart(state.cartItems);
     },
   },

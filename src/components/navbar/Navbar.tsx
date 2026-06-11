@@ -54,6 +54,10 @@ const navLinks = [
     name: "Home Decor",
     dropdown: [
       {
+        name: "Luxury Sculptures",
+        href: "/products?category=luxury-sculptures",
+      },
+      {
         name: "Vases",
         href: "/products?category=vases",
       },
@@ -65,10 +69,6 @@ const navLinks = [
         name: "Handcraft Idols",
         href: "/products?category=idols",
       },
-      {
-        name: "Luxury Sculptures",
-        href: "/products?category=luxury-sculptures",
-      }
     ],
   },
 

@@ -41,7 +41,7 @@ export default function CartPage() {
     (state: RootState) => state.cart
   );
 
-  const { isLoggedIn  } = useSelector(
+  const { isLoggedIn } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -52,7 +52,7 @@ export default function CartPage() {
   const [showLoginMessage, setShowLoginMessage] = useState(false);
 
   const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc: number, item: any) => acc + item.price * item.quantity,
     0
   );
 
@@ -87,12 +87,8 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    if (!isLoggedIn ) {
+    if (!isLoggedIn) {
       setShowLoginMessage(true);
-
-      // setTimeout(() => {
-      //   router.push("/login");
-      // }, 2500);
 
       return;
     }
@@ -135,18 +131,16 @@ export default function CartPage() {
                   className="flex items-center gap-2"
                 >
                   <div
-                    className={`flex items-center gap-1.5 ${
-                      i === 0
-                        ? "text-black"
-                        : "text-[#c4b8a8]"
-                    }`}
+                    className={`flex items-center gap-1.5 ${i === 0
+                      ? "text-black"
+                      : "text-[#c4b8a8]"
+                      }`}
                   >
                     <div
-                      className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                        i === 0
-                          ? "bg-black text-white"
-                          : "bg-[#e8e0d4] text-[#a89880]"
-                      }`}
+                      className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${i === 0
+                        ? "bg-black text-white"
+                        : "bg-[#e8e0d4] text-[#a89880]"
+                        }`}
                     >
                       {i === 0 ? (
                         <FiCheck size={10} />
@@ -189,19 +183,13 @@ export default function CartPage() {
               Your Cart Is Empty
             </h2>
 
-            <p className="mb-8 max-w-[340px] text-[14px] leading-[1.8] text-[#a89880] sm:mb-9 sm:max-w-[400px] sm:text-[15px]">
-              Discover our premium luxury home decor
-              collections crafted to transform your
-              modern interiors beautifully.
-            </p>
-
             <Link href="/">
               <motion.button
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 className="flex items-center gap-2 rounded-full bg-black px-8 py-3.5 text-[14px] font-bold text-white transition-colors hover:bg-[#1a1a1a] sm:px-10 sm:py-4 sm:text-[15px]"
               >
-                Explore Collection
+                Shop Now
                 <FiChevronRight size={16} />
               </motion.button>
             </Link>
@@ -212,27 +200,24 @@ export default function CartPage() {
             <div>
               {/* Free shipping progress */}
               <div
-                className={`mb-4 flex items-center gap-3 rounded-[14px] border px-4 py-3.5 sm:mb-5 sm:gap-4 sm:rounded-[16px] sm:px-5 ${
-                  freeShippingLeft === 0
-                    ? "border-[#b8e6c8] bg-[#f0faf4]"
-                    : "border-[#ede9e3] bg-white"
-                }`}
+                className={`mb-4 flex items-center gap-3 rounded-[14px] border px-4 py-3.5 sm:mb-5 sm:gap-4 sm:rounded-[16px] sm:px-5 ${freeShippingLeft === 0
+                  ? "border-[#b8e6c8] bg-[#f0faf4]"
+                  : "border-[#ede9e3] bg-white"
+                  }`}
               >
                 <FiTruck
-                  className={`shrink-0 ${
-                    freeShippingLeft === 0
-                      ? "text-emerald-500"
-                      : "text-[#c9a96e]"
-                  }`}
+                  className={`shrink-0 ${freeShippingLeft === 0
+                    ? "text-emerald-500"
+                    : "text-[#c9a96e]"
+                    }`}
                 />
 
                 <div className="flex-1">
                   <p
-                    className={`mb-2 text-[12px] font-semibold sm:text-[13px] ${
-                      freeShippingLeft === 0
-                        ? "text-emerald-700"
-                        : "text-[#7a6550]"
-                    }`}
+                    className={`mb-2 text-[12px] font-semibold sm:text-[13px] ${freeShippingLeft === 0
+                      ? "text-emerald-700"
+                      : "text-[#7a6550]"
+                      }`}
                   >
                     {freeShippingLeft === 0
                       ? "🎉 You've unlocked FREE shipping!"
@@ -249,11 +234,10 @@ export default function CartPage() {
                         duration: 0.8,
                         ease: "easeOut",
                       }}
-                      className={`h-full rounded-full ${
-                        freeShippingLeft === 0
-                          ? "bg-emerald-500"
-                          : "bg-[#c9a96e]"
-                      }`}
+                      className={`h-full rounded-full ${freeShippingLeft === 0
+                        ? "bg-emerald-500"
+                        : "bg-[#c9a96e]"
+                        }`}
                     />
                   </div>
                 </div>
@@ -342,12 +326,13 @@ export default function CartPage() {
                             {/* Qty stepper */}
                             <div className="flex items-center gap-2 rounded-full bg-[#f8f5f0] p-1 sm:p-[5px]">
                               <button
-                                onClick={() =>
-                                  dispatch(
-                                    decreaseQuantity(
-                                      item.id
-                                    )
-                                  )
+                                onClick={() => {
+                                  if (item.quantity === 1) {
+                                    handleRemove(item.id);
+                                  } else {
+                                    dispatch(decreaseQuantity(item.id));
+                                  }
+                                }
                                 }
                                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#5a4a38] shadow-sm transition-all duration-200 hover:bg-black hover:text-white sm:h-9 sm:w-9"
                               >
@@ -359,14 +344,12 @@ export default function CartPage() {
                               </span>
 
                               <button
-                                onClick={() =>
-                                  dispatch(
-                                    increaseQuantity(
-                                      item.id
-                                    )
-                                  )
-                                }
-                                className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-all duration-200 hover:scale-110 sm:h-9 sm:w-9"
+                                onClick={() => dispatch(increaseQuantity(item.id))}
+                                disabled={item.stock != null && item.quantity >= item.stock}
+                                className={`flex h-8 w-8 items-center justify-center rounded-full text-white transition-all duration-200 sm:h-9 sm:w-9 ${item.stock != null && item.quantity >= item.stock
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-black hover:scale-110"
+                                  }`}
                               >
                                 <FiPlus size={13} />
                               </button>
@@ -419,11 +402,10 @@ export default function CartPage() {
                   whileTap={{ scale: 0.96 }}
                   onClick={handleCoupon}
                   disabled={couponApplied}
-                  className={`rounded-full px-4 py-2.5 text-[12px] font-bold transition-all duration-200 sm:px-5 sm:text-[13px] ${
-                    couponApplied
-                      ? "bg-emerald-500 text-white"
-                      : "bg-black text-white hover:bg-[#333]"
-                  }`}
+                  className={`rounded-full px-4 py-2.5 text-[12px] font-bold transition-all duration-200 sm:px-5 sm:text-[13px] ${couponApplied
+                    ? "bg-emerald-500 text-white"
+                    : "bg-black text-white hover:bg-[#333]"
+                    }`}
                 >
                   {couponApplied ? (
                     <span className="flex items-center gap-1.5">
@@ -462,13 +444,13 @@ export default function CartPage() {
 
                     ...(couponApplied
                       ? [
-                          {
-                            label: "Discount (10%)",
-                            value: `-₹${discount}`,
-                            sub: "LUXURY10 applied",
-                            green: true,
-                          },
-                        ]
+                        {
+                          label: "Discount (10%)",
+                          value: `-₹${discount}`,
+                          sub: "LUXURY10 applied",
+                          green: true,
+                        },
+                      ]
                       : []),
 
                     {
@@ -495,11 +477,10 @@ export default function CartPage() {
 
                         {row.sub && (
                           <p
-                            className={`mt-0.5 text-[11px] ${
-                              row.green
-                                ? "text-emerald-600"
-                                : "text-[#c4b8a8]"
-                            }`}
+                            className={`mt-0.5 text-[11px] ${row.green
+                              ? "text-emerald-600"
+                              : "text-[#c4b8a8]"
+                              }`}
                           >
                             {row.sub}
                           </p>
@@ -507,11 +488,10 @@ export default function CartPage() {
                       </div>
 
                       <span
-                        className={`text-[14px] font-bold sm:text-[15px] ${
-                          row.green
-                            ? "text-emerald-600"
-                            : "text-[#111827]"
-                        }`}
+                        className={`text-[14px] font-bold sm:text-[15px] ${row.green
+                          ? "text-emerald-600"
+                          : "text-[#111827]"
+                          }`}
                       >
                         {row.value}
                       </span>

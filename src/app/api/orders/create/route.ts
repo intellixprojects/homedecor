@@ -3,92 +3,85 @@ import { connectDB } from "@/lib/mongodb";
 import Order from "@/models/Order";
 import User from "@/models/User";
 
-// GET SINGLE ORDER
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  try {
-    await connectDB();
-    const order = await Order.findById(params.id);
-    if (!order) return NextResponse.json({ success: false, error: "Order not found" });
-    return NextResponse.json({ success: true, order });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: String(error) });
-  }
-}
-
-// UPDATE ORDER STATUS
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const { status } = await req.json();
+    const body = await req.json();
 
-    const existingOrder = await Order.findById(params.id);
-    if (!existingOrder) {
-      return NextResponse.json({ success: false, error: "Order not found" });
-    }
+    const {
+      orderId,
+      userEmail,
+      estimatedDelivery,
+      subtotal,
+      shipping,
+      discount,
+      totalAmount,
+      status,
+      shippingAddress,
+      items,
+    } = body;
 
-    // If cancelling, decrement user's orders count and spent amount
-    if (status === "Cancelled" && existingOrder.status !== "Cancelled") {
-      await User.findOneAndUpdate(
-        { email: existingOrder.userEmail },
+    // Basic validation
+    if (
+      !orderId ||
+      !userEmail ||
+      !totalAmount ||
+      !shippingAddress ||
+      !items?.length
+    ) {
+      return NextResponse.json(
         {
-          $inc: {
-            orders: -1,
-            spent: -existingOrder.totalAmount,
-          },
-        }
+          success: false,
+          message: "Missing required fields",
+        },
+        { status: 400 }
       );
     }
 
-    // If un-cancelling (admin restores), re-increment
-    if (status !== "Cancelled" && existingOrder.status === "Cancelled") {
-      await User.findOneAndUpdate(
-        { email: existingOrder.userEmail },
-        {
-          $inc: {
-            orders: 1,
-            spent: existingOrder.totalAmount,
-          },
-        }
-      );
-    }
+    // Create order
+    const order = await Order.create({
+      orderId,
+      userEmail,
+      estimatedDelivery,
+      subtotal,
+      shipping,
+      discount,
+      totalAmount,
+      status,
+      shippingAddress,
+      items,
+    });
 
-    const order = await Order.findByIdAndUpdate(
-      params.id,
-      { status },
+    // Update user stats
+    await User.findOneAndUpdate(
+      { email: userEmail },
+      {
+        $inc: {
+          orders: 1,
+          spent: totalAmount,
+        },
+      },
       { new: true }
     );
 
-    return NextResponse.json({ success: true, order });
+    return NextResponse.json({
+      success: true,
+      message: "Order created successfully",
+      order,
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, error: String(error) });
-  }
-}
+    console.error("CREATE ORDER ERROR:", error);
 
-// DELETE ORDER
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  try {
-    await connectDB();
-
-    const existingOrder = await Order.findById(params.id);
-
-    // If deleting a non-cancelled order, decrement user stats too
-    if (existingOrder && existingOrder.status !== "Cancelled") {
-      await User.findOneAndUpdate(
-        { email: existingOrder.userEmail },
-        {
-          $inc: {
-            orders: -1,
-            spent: -existingOrder.totalAmount,
-          },
-        }
-      );
-    }
-
-    await Order.findByIdAndDelete(params.id);
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: String(error) });
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Internal Server Error",
+      },
+      { status: 500 }
+    );
   }
 }

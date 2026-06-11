@@ -41,14 +41,6 @@ const collections = [
     description:
       "Enhance your interiors with elegant handcrafted idols and decorative hanging plates created for luxurious and modern living spaces.",
   },
-  {
-    id: 4,
-    title: "Modern Lighting",
-    subtitle: "Luxury Light Collection",
-    image: "/images/collection4.jpg",
-    description:
-      "Transform your interiors with premium lighting collections designed to blend modern sophistication, comfort, and handcrafted beauty.",
-  },
 ];
 
 export default function CollectionsPage() {

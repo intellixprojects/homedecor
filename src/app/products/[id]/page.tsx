@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -50,12 +51,8 @@ export default function ProductDetails() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const res = await fetch("/api/products", {
-          cache: "no-store",
-        });
-
+        const res = await fetch("/api/products", { cache: "no-store" });
         const data = await res.json();
-
         if (data.success) {
           setAllProducts(data.products);
         } else {
@@ -66,14 +63,11 @@ export default function ProductDetails() {
         setAllProducts([]);
       }
     };
-
     loadProducts();
   }, []);
 
   const product = useMemo(() => {
-    return allProducts.find(
-      (item: any) => item._id === params?.id
-    );
+    return allProducts.find((item: any) => item._id === params?.id);
   }, [allProducts, params]);
 
   const [quantity, setQuantity] = useState(1);
@@ -83,6 +77,7 @@ export default function ProductDetails() {
   const [activeTab, setActiveTab] = useState<"description" | "shipping" | "returns">("description");
   const [previewOpen, setPreviewOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     if (product) {
@@ -95,16 +90,9 @@ export default function ProductDetails() {
       <>
         <Navbar />
         <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center px-4 text-center">
-          <h1 className="text-3xl sm:text-5xl font-black text-black mb-4">
-            Product Not Found
-          </h1>
-          <p className="text-gray-500 mb-8">
-            This product may have been removed.
-          </p>
-          <Link
-            href="/products"
-            className="h-[52px] px-8 rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#1f1f1f] transition"
-          >
+          <h1 className="text-3xl sm:text-5xl font-black text-black mb-4">Product Not Found</h1>
+          <p className="text-gray-500 mb-8">This product may have been removed.</p>
+          <Link href="/products" className="h-[52px] px-8 rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#1f1f1f] transition">
             Back To Products
           </Link>
         </div>
@@ -113,23 +101,19 @@ export default function ProductDetails() {
     );
   }
 
-  const isInStock = product.inStock !== false;
+  const isInStock = product.inStock !== false && (product.stock == null || product.stock > 0);
+  const isLowStock = isInStock && product.stock != null && product.stock <= 5;
+  const maxQty = product.stock != null ? product.stock : 999;
 
-  const isWished = wishlistItems.some(
-    (item: any) => item._id === product._id
-  );
+  const isWished = wishlistItems.some((item: any) => item._id === product._id);
 
   const relatedProducts = allProducts.filter(
-    (item: any) =>
-      item.category === product.category &&
-      item._id !== product._id
+    (item: any) => item.category === product.category && item._id !== product._id
   );
 
   const discount =
     product.oldPrice && product.oldPrice > product.price
-      ? Math.round(
-        ((product.oldPrice - product.price) / product.oldPrice) * 100
-      )
+      ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : 0;
 
   const handleAddToCart = () => {
@@ -141,6 +125,7 @@ export default function ProductDetails() {
         price: product.price,
         image: product.image,
         quantity,
+        stock: product.stock ?? null,
       })
     );
     setAdded(true);
@@ -190,29 +175,21 @@ export default function ProductDetails() {
   };
 
   const nextImage = () => {
-    const nextIndex =
-      activeImageIndex === product.gallery.length - 1
-        ? 0
-        : activeImageIndex + 1;
+    const nextIndex = activeImageIndex === product.gallery.length - 1 ? 0 : activeImageIndex + 1;
     setActiveImageIndex(nextIndex);
     setMainImage(product.gallery[nextIndex]);
   };
 
   const prevImage = () => {
-    const prevIndex =
-      activeImageIndex === 0
-        ? product.gallery.length - 1
-        : activeImageIndex - 1;
+    const prevIndex = activeImageIndex === 0 ? product.gallery.length - 1 : activeImageIndex - 1;
     setActiveImageIndex(prevIndex);
     setMainImage(product.gallery[prevIndex]);
   };
 
   const tabContent = {
     description: product.description,
-    shipping:
-      "Free standard shipping on all orders over ₹500. Express delivery available at checkout. Estimated delivery: 3–7 business days.",
-    returns:
-      "We offer a hassle-free 7-day return policy. Items must be unused and in original packaging.",
+    shipping: "Free standard shipping on all orders over ₹500. Express delivery available at checkout. Estimated delivery: 3–7 business days.",
+    returns: "We offer a hassle-free 7-day return policy. Items must be unused and in original packaging.",
   };
 
   const ratingValue = Number(product.rating) || 0;
@@ -232,9 +209,7 @@ export default function ProductDetails() {
             <span>/</span>
             <Link href="/products" className="hover:text-black transition">Products</Link>
             <span>/</span>
-            <span className="text-black font-medium truncate max-w-[160px]">
-              {product.title}
-            </span>
+            <span className="text-black font-medium truncate max-w-[160px]">{product.title}</span>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-10 xl:gap-14 items-start">
@@ -245,13 +220,7 @@ export default function ProductDetails() {
                 initial={{ opacity: 0, y: 32 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55 }}
-                onClick={() =>
-                  openPreview(
-                    (product.gallery || []).findIndex(
-                      (img: string) => img === mainImage
-                    )
-                  )
-                }
+                onClick={() => openPreview((product.gallery || []).findIndex((img: string) => img === mainImage))}
                 className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] bg-white h-[320px] sm:h-[420px] md:h-[500px] mb-4 shadow-[0_4px_40px_rgba(0,0,0,0.08)] cursor-zoom-in group"
               >
                 <AnimatePresence mode="wait">
@@ -272,7 +241,15 @@ export default function ProductDetails() {
                   </motion.div>
                 </AnimatePresence>
 
-                {discount > 0 && (
+                {/* Low stock badge */}
+                {isLowStock && (
+                  <div className="absolute top-4 left-4 bg-red-500 text-white text-[11px] font-bold tracking-[1px] rounded-full px-4 py-2 z-10">
+                    Only {product.stock} left
+                  </div>
+                )}
+
+                {/* Discount — only if not low stock */}
+                {!isLowStock && discount > 0 && (
                   <div className="absolute top-4 left-4 bg-black text-white text-[11px] font-bold tracking-[2px] rounded-full px-4 py-2 z-10">
                     {discount}% OFF
                   </div>
@@ -281,10 +258,7 @@ export default function ProductDetails() {
                 <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
                   <button
                     onClick={handleWishlist}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-all duration-300 ${isWished
-                      ? "bg-black text-white scale-110"
-                      : "bg-white text-gray-600 hover:bg-black hover:text-white"
-                      }`}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-all duration-300 ${isWished ? "bg-black text-white scale-110" : "bg-white text-gray-600 hover:bg-black hover:text-white"}`}
                   >
                     <FiHeart className={`text-sm transition-all duration-300 ${isWished ? "fill-white" : ""}`} />
                   </button>
@@ -308,22 +282,11 @@ export default function ProductDetails() {
                 {(product.gallery || []).map((img: string, index: number) => (
                   <button
                     key={index}
-                    onClick={() => {
-                      setMainImage(img);
-                      setActiveImageIndex(index);
-                    }}
-                    className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 h-[80px] sm:h-[95px] p-1 ${mainImage === img
-                      ? "border-black scale-[0.97]"
-                      : "border-transparent hover:border-gray-300"
-                      }`}
+                    onClick={() => { setMainImage(img); setActiveImageIndex(index); }}
+                    className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 h-[80px] sm:h-[95px] p-1 ${mainImage === img ? "border-black scale-[0.97]" : "border-transparent hover:border-gray-300"}`}
                   >
                     <div className="relative w-full h-full rounded-xl overflow-hidden">
-                      <Image
-                        src={img}
-                        alt=""
-                        fill
-                        className={`object-cover ${!isInStock ? "grayscale opacity-60" : ""}`}
-                      />
+                      <Image src={img} alt="" fill className={`object-cover ${!isInStock ? "grayscale opacity-60" : ""}`} />
                     </div>
                   </button>
                 ))}
@@ -339,9 +302,7 @@ export default function ProductDetails() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-4 h-px bg-[#c9a96e]" />
-                <p className="uppercase tracking-[5px] text-[11px] text-[#c9a96e] font-semibold">
-                  {product.category}
-                </p>
+                <p className="uppercase tracking-[5px] text-[11px] text-[#c9a96e] font-semibold">{product.category}</p>
               </div>
 
               <h1 className="font-black text-[#111827] leading-[1.05] tracking-tight text-[32px] sm:text-[38px] lg:text-[44px] mb-5">
@@ -355,12 +316,7 @@ export default function ProductDetails() {
                     {Array.from({ length: 5 }).map((_, i) => (
                       <FiStar
                         key={i}
-                        className={`text-[14px] transition-colors ${i < fullStars
-                          ? "fill-[#c9a96e] text-[#c9a96e]"
-                          : i === fullStars && hasHalf
-                            ? "fill-[#c9a96e]/50 text-[#c9a96e]"
-                            : "text-[#d1d5db]"
-                          }`}
+                        className={`text-[14px] transition-colors ${i < fullStars ? "fill-[#c9a96e] text-[#c9a96e]" : i === fullStars && hasHalf ? "fill-[#c9a96e]/50 text-[#c9a96e]" : "text-[#d1d5db]"}`}
                       />
                     ))}
                   </div>
@@ -371,7 +327,9 @@ export default function ProductDetails() {
                 {isInStock ? (
                   <div className="flex items-center gap-1.5 text-emerald-600">
                     <FiCheckCircle />
-                    <span className="text-sm font-semibold">In Stock</span>
+                    <span className="text-sm font-semibold">
+                      {isLowStock ? `Only ${product.stock} left` : "In Stock"}
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1.5 text-red-500">
@@ -390,14 +348,10 @@ export default function ProductDetails() {
 
               {/* PRICE */}
               <div className="flex items-end gap-4 bg-white rounded-[22px] px-5 sm:px-6 py-5 mb-6">
-                <span className="font-black text-[#111827] leading-none text-[38px] sm:text-[46px]">
-                  ₹{product.price}
-                </span>
+                <span className="font-black text-[#111827] leading-none text-[38px] sm:text-[46px]">₹{product.price}</span>
                 {product.oldPrice && product.oldPrice > product.price && (
                   <div className="mb-1">
-                    <span className="line-through text-gray-400 text-lg">
-                      ₹{product.oldPrice}
-                    </span>
+                    <span className="line-through text-gray-400 text-lg">₹{product.oldPrice}</span>
                     <span className="block text-[11px] font-bold text-emerald-600 uppercase tracking-wide mt-1">
                       You save ₹{product.oldPrice - product.price}
                     </span>
@@ -408,60 +362,31 @@ export default function ProductDetails() {
               {/* SPECS CARD */}
               {(product.width || product.height || product.length || product.weight) && (
                 <div className="bg-white rounded-[20px] px-5 py-4 mb-6 flex flex-col gap-4">
-
-                  {/* DIMENSIONS */}
                   {(product.width || product.height) && (
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-2 min-w-[130px]">
                         <FiMaximize2 className="text-[#c9a96e] text-[15px]" />
-                        <span className="text-[12px] font-semibold text-[#6b7280] uppercase tracking-wider">
-                          Dimensions
-                        </span>
+                        <span className="text-[12px] font-semibold text-[#6b7280] uppercase tracking-wider">Dimensions</span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        {product.width && (
-                          <span className="rounded-full bg-[#111827] px-3 py-1 text-[11px] font-semibold text-white">
-                            W: {product.width}
-                          </span>
-                        )}
-                        {product.height && (
-                          <span className="rounded-full bg-[#111827] px-3 py-1 text-[11px] font-semibold text-white">
-                            H: {product.height}
-                          </span>
-                        )}
-                        {product.length && (
-                          <span className="rounded-full bg-[#111827] px-3 py-1 text-[11px] font-semibold text-white">
-                            L: {product.length}
-                          </span>
-                        )}
+                        {product.width && <span className="rounded-full bg-[#111827] px-3 py-1 text-[11px] font-semibold text-white">W: {product.width}</span>}
+                        {product.height && <span className="rounded-full bg-[#111827] px-3 py-1 text-[11px] font-semibold text-white">H: {product.height}</span>}
+                        {product.length && <span className="rounded-full bg-[#111827] px-3 py-1 text-[11px] font-semibold text-white">L: {product.length}</span>}
                       </div>
                     </div>
                   )}
-
-                  {/* DIVIDER */}
-                  {(product.width || product.height) && (product.length || product.weight) && (
-                    <div className="h-px bg-[#f3f4f6]" />
-                  )}
-
-                  {/* SPECIFICATIONS */}
+                  {(product.width || product.height) && (product.length || product.weight) && <div className="h-px bg-[#f3f4f6]" />}
                   {(product.length || product.weight) && (
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-2 min-w-[130px]">
                         <FiPackage className="text-[#c9a96e] text-[15px]" />
-                        <span className="text-[12px] font-semibold text-[#6b7280] uppercase tracking-wider">
-                          Weight
-                        </span>
+                        <span className="text-[12px] font-semibold text-[#6b7280] uppercase tracking-wider">Weight</span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        {product.weight && (
-                          <span className="rounded-full bg-[#f3f4f6] border border-[#e5e7eb] px-3 py-1 text-[11px] font-semibold text-[#111827]">
-                             {product.weight}
-                          </span>
-                        )}
+                        {product.weight && <span className="rounded-full bg-[#f3f4f6] border border-[#e5e7eb] px-3 py-1 text-[11px] font-semibold text-[#111827]">{product.weight}</span>}
                       </div>
                     </div>
                   )}
-
                 </div>
               )}
 
@@ -472,16 +397,12 @@ export default function ProductDetails() {
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`capitalize text-[13px] font-semibold rounded-[10px] transition-all duration-200 px-4 py-2 ${activeTab === tab
-                        ? "bg-black text-white"
-                        : "text-gray-500 hover:text-black"
-                        }`}
+                      className={`capitalize text-[13px] font-semibold rounded-[10px] transition-all duration-200 px-4 py-2 ${activeTab === tab ? "bg-black text-white" : "text-gray-500 hover:text-black"}`}
                     >
                       {tab}
                     </button>
                   ))}
                 </div>
-
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={activeTab}
@@ -506,9 +427,7 @@ export default function ProductDetails() {
                   <FiXCircle className="text-red-500 text-[20px] shrink-0" />
                   <div>
                     <p className="text-[14px] font-bold text-red-600">Currently Unavailable</p>
-                    <p className="text-[12px] text-red-400 mt-0.5">
-                      This product is out of stock. Check back soon or explore related products below.
-                    </p>
+                    <p className="text-[12px] text-red-400 mt-0.5">This product is out of stock. Check back soon or explore related products below.</p>
                   </div>
                 </motion.div>
               )}
@@ -525,9 +444,9 @@ export default function ProductDetails() {
                   </button>
                   <span className="w-6 text-center font-bold text-[16px]">{quantity}</span>
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    disabled={!isInStock}
-                    className="w-9 h-9 rounded-full bg-black text-white hover:scale-110 transition flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
+                    onClick={() => quantity < maxQty && setQuantity(quantity + 1)}
+                    disabled={!isInStock || quantity >= maxQty}
+                    className={`w-9 h-9 rounded-full text-white transition flex items-center justify-center ${!isInStock || quantity >= maxQty ? "bg-gray-300 cursor-not-allowed" : "bg-black hover:scale-110"}`}
                   >
                     <FiPlus />
                   </button>
@@ -537,28 +456,28 @@ export default function ProductDetails() {
                   whileTap={isInStock ? { scale: 0.97 } : {}}
                   onClick={handleAddToCart}
                   disabled={!isInStock}
-                  className={`flex-1 h-[54px] min-w-[190px] rounded-full font-bold text-[15px] flex items-center justify-center gap-3 transition-all duration-300 ${!isInStock
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : added
-                      ? "bg-emerald-600 text-white"
-                      : "bg-black text-white hover:bg-[#1f1f1f]"
-                    }`}
+                  className={`flex-1 h-[54px] min-w-[190px] rounded-full font-bold text-[15px] flex items-center justify-center gap-3 transition-all duration-300 ${!isInStock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : added ? "bg-emerald-600 text-white" : "bg-black text-white hover:bg-[#1f1f1f]"}`}
                 >
-                  {!isInStock ? (
-                    <><FiXCircle /> Out of Stock</>
-                  ) : added ? (
-                    <><FiCheck /> Added to Cart!</>
-                  ) : (
-                    <><FiShoppingBag /> Add to Cart</>
-                  )}
+                  {!isInStock ? <><FiXCircle /> Out of Stock</> : added ? <><FiCheck /> Added to Cart!</> : <><FiShoppingBag /> Add to Cart</>}
                 </motion.button>
 
                 <button
                   disabled={!isInStock}
-                  className={`h-[54px] rounded-full font-bold text-[15px] transition-all duration-300 px-7 w-full sm:w-auto ${!isInStock
-                    ? "border-2 border-gray-200 text-gray-400 cursor-not-allowed bg-white"
-                    : "border-2 border-black hover:bg-black hover:text-white"
-                    }`}
+                  onClick={() => {
+                    if (!isInStock) return;
+                    dispatch(
+                      addToCart({
+                        id: product._id || product.id,
+                        title: product.title,
+                        price: product.price,
+                        image: product.image,
+                        quantity,
+                        stock: product.stock ?? null,
+                      })
+                    );
+                    router.push("/checkout");
+                  }}
+                  className={`h-[54px] rounded-full font-bold text-[15px] transition-all duration-300 px-7 w-full sm:w-auto ${!isInStock ? "border-2 border-gray-200 text-gray-400 cursor-not-allowed bg-white" : "border-2 border-black hover:bg-black hover:text-white"}`}
                 >
                   Buy Now
                 </button>
@@ -571,13 +490,8 @@ export default function ProductDetails() {
                   { icon: <FiShield />, label: "Secure Pay", sub: "100% protected" },
                   { icon: <FiRefreshCcw />, label: "7-day Returns", sub: "Easy returns" },
                 ].map(({ icon, label, sub }) => (
-                  <div
-                    key={label}
-                    className="bg-white rounded-[18px] flex flex-col items-center text-center px-3 py-5"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-[#f8f5f0] flex items-center justify-center text-[#c9a96e] text-lg mb-3">
-                      {icon}
-                    </div>
+                  <div key={label} className="bg-white rounded-[18px] flex flex-col items-center text-center px-3 py-5">
+                    <div className="w-10 h-10 rounded-full bg-[#f8f5f0] flex items-center justify-center text-[#c9a96e] text-lg mb-3">{icon}</div>
                     <p className="font-bold text-[13px] text-black">{label}</p>
                     <p className="text-[11px] text-gray-400 mt-1">{sub}</p>
                   </div>
@@ -591,19 +505,13 @@ export default function ProductDetails() {
             <div className="mt-24">
               <div className="flex items-center justify-between mb-10">
                 <div>
-                  <p className="uppercase tracking-[4px] text-[11px] text-[#c9a96e] font-semibold mb-3">
-                    More Collection
-                  </p>
+                  <p className="uppercase tracking-[4px] text-[11px] text-[#c9a96e] font-semibold mb-3">More Collection</p>
                   <h2 className="text-3xl sm:text-5xl font-black text-black">Related Products</h2>
                 </div>
-                <Link
-                  href="/products"
-                  className="hidden sm:flex h-[50px] px-7 rounded-full border border-black items-center justify-center font-semibold hover:bg-black hover:text-white transition"
-                >
+                <Link href="/products" className="hidden sm:flex h-[50px] px-7 rounded-full border border-black items-center justify-center font-semibold hover:bg-black hover:text-white transition">
                   View All
                 </Link>
               </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {relatedProducts.slice(0, 4).map((item: any) => (
                   <ProductCard key={item._id || item.id} product={item} />
@@ -622,27 +530,15 @@ export default function ProductDetails() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
             >
-              <button
-                onClick={() => setPreviewOpen(false)}
-                className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white text-black flex items-center justify-center hover:rotate-90 transition duration-300 z-20"
-              >
+              <button onClick={() => setPreviewOpen(false)} className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white text-black flex items-center justify-center hover:rotate-90 transition duration-300 z-20">
                 <FiX size={20} />
               </button>
-
-              <button
-                onClick={prevImage}
-                className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-black transition z-20"
-              >
+              <button onClick={prevImage} className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-black transition z-20">
                 <FiChevronLeft size={22} />
               </button>
-
-              <button
-                onClick={nextImage}
-                className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-black transition z-20"
-              >
+              <button onClick={nextImage} className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-black transition z-20">
                 <FiChevronRight size={22} />
               </button>
-
               <motion.div
                 key={product?.gallery?.[activeImageIndex]}
                 initial={{ opacity: 0, scale: 0.96 }}
@@ -650,27 +546,15 @@ export default function ProductDetails() {
                 exit={{ opacity: 0 }}
                 className="relative w-full max-w-6xl h-[70vh] sm:h-[80vh]"
               >
-                <Image
-                  src={product?.gallery?.[activeImageIndex]}
-                  alt={product?.title}
-                  fill
-                  className="object-contain"
-                />
+                <Image src={product?.gallery?.[activeImageIndex]} alt={product?.title} fill className="object-contain" />
               </motion.div>
-
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 overflow-x-auto scrollbar-hide">
                 <div className="flex items-center gap-3 w-max mx-auto">
                   {(product?.gallery || []).map((img: string, index: number) => (
                     <button
                       key={index}
-                      onClick={() => {
-                        setActiveImageIndex(index);
-                        setMainImage(img);
-                      }}
-                      className={`relative shrink-0 w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-2xl border-2 transition-all duration-300 ${activeImageIndex === index
-                        ? "border-white scale-95"
-                        : "border-transparent opacity-60 hover:opacity-100"
-                        }`}
+                      onClick={() => { setActiveImageIndex(index); setMainImage(img); }}
+                      className={`relative shrink-0 w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-2xl border-2 transition-all duration-300 ${activeImageIndex === index ? "border-white scale-95" : "border-transparent opacity-60 hover:opacity-100"}`}
                     >
                       <Image src={img} alt="" fill className="object-cover" />
                     </button>

@@ -55,7 +55,7 @@ export async function PUT(
 
     const product = await Product.findByIdAndUpdate(
       id,
-      body,
+      { $set: { ...body, stock: body.stock ?? null } },
       { new: true }
     );
 
@@ -70,7 +70,7 @@ export async function PUT(
         }
       );
     }
-    
+
     return NextResponse.json({
       success: true,
       product,

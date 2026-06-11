@@ -28,6 +28,8 @@ const persistConfig = {
 
   whitelist: [
     "auth",
+    "cart",
+    "wishlist",
   ],
 };
 

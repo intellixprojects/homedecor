@@ -5,7 +5,6 @@ export type Product = {
   category: string;
   price: number;
   oldPrice: number;
-  rating: number;
   reviews: number;
   stock: boolean;
   inStock: boolean;
@@ -25,7 +24,6 @@ export const products: Product[] = [
     category: "Showpieces",
     price: 89,
     oldPrice: 129,
-    rating: 4.8,
     reviews: 124,
     stock: true,
     inStock: true,
@@ -54,7 +52,6 @@ export const products: Product[] = [
     category: "Handcraft Idols",
     price: 119,
     oldPrice: 169,
-    rating: 4.7,
     reviews: 96,
     stock: true,
     inStock: true,
@@ -84,7 +81,6 @@ export const products: Product[] = [
     category: "Vases",
     price: 59,
     oldPrice: 89,
-    rating: 4.9,
     reviews: 142,
     stock: true,
     inStock: true,
@@ -114,7 +110,6 @@ export const products: Product[] = [
     category: "Showpieces",
     price: 149,
     oldPrice: 199,
-    rating: 4.8,
     reviews: 88,
     stock: true,
     inStock: true,
@@ -144,7 +139,6 @@ export const products: Product[] = [
     category: "Vases",
     price: 99,
     oldPrice: 139,
-    rating: 4.7,
     reviews: 103,
     stock: true,
     inStock: true,
@@ -174,7 +168,6 @@ export const products: Product[] = [
     category: "Handcraft Idols",
     price: 79,
     oldPrice: 119,
-    rating: 4.6,
     reviews: 65,
     stock: true,
     inStock: true,
@@ -204,7 +197,6 @@ export const products: Product[] = [
     category: "Vases",
     price: 69,
     oldPrice: 99,
-    rating: 4.7,
     reviews: 91,
     stock: true,
     inStock: true,
@@ -234,7 +226,6 @@ export const products: Product[] = [
     category: "Showpieces",
     price: 179,
     oldPrice: 249,
-    rating: 4.9,
     reviews: 171,
     stock: true,
     inStock: true,
