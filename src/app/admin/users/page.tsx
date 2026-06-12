@@ -219,10 +219,10 @@ export default function AdminUsersPage() {
                 <div className="flex flex-col gap-3">
 
                   {/* TOP */}
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex items-start justify-between gap-3">
 
                     {/* LEFT */}
-                    <div className="flex min-w-0 items-start gap-3">
+                    <div className="flex min-w-0 flex-1 items-start gap-3">
                       <div className="relative h-[56px] w-[56px] shrink-0 overflow-hidden rounded-xl bg-[#f3f4f6]">
                         <Image src={user.image} alt={user.name} fill className="object-cover" />
                       </div>

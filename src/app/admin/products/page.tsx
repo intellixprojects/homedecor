@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+import imageCompression from "browser-image-compression";
 
 import {
   FiTrash2,
@@ -117,38 +118,55 @@ export default function AdminProductsPage() {
     ]);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const updatedLoading = [...uploadingIndex];
-    updatedLoading[index] = true;
-    setUploadingIndex(updatedLoading);
-    try {
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (event) => resolve(event.target?.result as string);
-        reader.onerror = () => reject(new Error("File read failed"));
-        reader.readAsDataURL(file);
-      });
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error("Upload failed");
-      const updatedImages = [...images];
-      updatedImages[index] = data.url;
-      setImages(updatedImages);
-    } catch (error) {
-      console.error(error);
-      alert("Image upload failed");
-    } finally {
-      const doneLoading = [...uploadingIndex];
-      doneLoading[index] = false;
-      setUploadingIndex(doneLoading);
+  const handleImageUpload = async (
+  e: React.ChangeEvent<HTMLInputElement>,
+  index: number
+) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  if (file.size > 10 * 1024 * 1024) {
+    alert("Please upload an image smaller than 10 MB");
+    return;
+  }
+
+  const updatedLoading = [...uploadingIndex];
+  updatedLoading[index] = true;
+  setUploadingIndex(updatedLoading);
+
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    });
+
+    const formData = new FormData();
+    formData.append("image", compressedFile);
+
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Upload failed");
     }
-  };
+
+    const updatedImages = [...images];
+    updatedImages[index] = data.url;
+    setImages(updatedImages);
+  } catch (error) {
+    console.error(error);
+    alert("Image upload failed");
+  } finally {
+    const doneLoading = [...uploadingIndex];
+    doneLoading[index] = false;
+    setUploadingIndex(doneLoading);
+  }
+};
 
   const handleAddOrUpdateProduct = async () => {
     if (!title || !category || !price || !images[0] || !images[1] || !images[2]) {

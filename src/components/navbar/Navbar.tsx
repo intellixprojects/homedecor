@@ -242,6 +242,7 @@ export default function Navbar() {
                     src="/images/LOGO.png"
                     alt="NishMee Logo"
                     fill
+                    sizes="200px"
                     priority
                     className="object-contain"
                   />
