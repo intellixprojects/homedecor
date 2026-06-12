@@ -152,14 +152,6 @@ export default function WishlistPage() {
                         </h3>
                       </Link>
 
-                      {/* Rating */}
-                      <div className="flex items-center gap-2 mb-4 sm:mb-[18px]">
-                        <FiStar className="text-yellow-500 fill-yellow-500" />
-                        <span className="text-sm font-medium text-gray-600">
-                          {item.rating} Rating
-                        </span>
-                      </div>
-
                       {/* Price */}
                       <div className="flex items-center gap-3 mb-5 sm:mb-6">
                         <span className="text-2xl sm:text-3xl font-black text-black">
