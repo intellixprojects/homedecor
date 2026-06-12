@@ -26,7 +26,6 @@ interface ProductProps {
     category: string;
     price: number;
     oldPrice?: number;
-    rating: number;
     image: string;
     inStock?: boolean;
     stock?: number | null;
@@ -76,7 +75,6 @@ export default function ProductCard({ product }: ProductProps) {
           category: product.category,
           price: product.price,
           oldPrice: product.oldPrice || 0,
-          rating: product.rating,
           image: product.image,
         })
       );
@@ -160,12 +158,6 @@ export default function ProductCard({ product }: ProductProps) {
               {product.title}
             </h3>
           </Link>
-
-          <div className="flex items-center gap-[6px]" style={{ marginBottom: "18px" }}>
-            <FiStar className="text-[#c9a96e] fill-[#c9a96e] text-[13px]" />
-            <span className="text-[#1a1714] text-[13px] font-semibold">{product.rating}</span>
-            <span className="text-[#b0a898] text-[12px]">/ 5</span>
-          </div>
 
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-baseline gap-[10px]">

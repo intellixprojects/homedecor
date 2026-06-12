@@ -157,7 +157,6 @@ export default function AdminProductsPage() {
     }
 
     const stockNum = stock === "" || isNaN(Number(stock)) ? null : Number(stock);
-    // Auto inStock based on stock value
     const inStock = stockNum === null ? true : stockNum > 0;
 
     const productData = {
@@ -295,15 +294,6 @@ export default function AdminProductsPage() {
                     <div>
                       <div className="inline-flex rounded-full bg-[#f3f4f6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[1.5px] text-[#6b7280]">{item.category}</div>
                       <h3 className="mt-2 text-[17px] leading-snug font-black text-[#111827]">{item.title}</h3>
-                      <div className="mt-2 flex items-center gap-1.5">
-                        <span className="text-[13px] font-bold text-[#111827]">{item.rating}</span>
-                        <div className="flex items-center gap-0.5">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <FiStar key={i} className={`text-[12px] ${i < item.rating ? "fill-[#f59e0b] text-[#f59e0b]" : "text-[#d1d5db]"}`} />
-                          ))}
-                        </div>
-                        <span className="text-[11px] text-[#9ca3af]">/ 5</span>
-                      </div>
                       <div className="mt-3 flex flex-wrap items-end gap-2">
                         <h4 className="text-[26px] font-black leading-none text-[#111827]">₹{item.price}</h4>
                         {item.oldPrice && <span className="pb-[2px] text-[13px] font-medium text-[#9ca3af] line-through">₹{item.oldPrice}</span>}

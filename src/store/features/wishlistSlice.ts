@@ -6,7 +6,6 @@ interface WishlistItem {
   category: string;
   price: number;
   oldPrice: number;
-  rating: number;
   image: string;
 }
 

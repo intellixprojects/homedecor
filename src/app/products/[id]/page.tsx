@@ -144,7 +144,6 @@ export default function ProductDetails() {
           category: product.category,
           price: product.price,
           oldPrice: product.oldPrice,
-          rating: product.rating,
           image: product.image,
         })
       );
@@ -191,10 +190,6 @@ export default function ProductDetails() {
     shipping: "Free standard shipping on all orders over ₹500. Express delivery available at checkout. Estimated delivery: 3–7 business days.",
     returns: "We offer a hassle-free 7-day return policy. Items must be unused and in original packaging.",
   };
-
-  const ratingValue = Number(product.rating) || 0;
-  const fullStars = Math.floor(ratingValue);
-  const hasHalf = ratingValue - fullStars >= 0.5;
 
   return (
     <>
@@ -312,16 +307,14 @@ export default function ProductDetails() {
               {/* RATING + STOCK */}
               <div className="flex items-center flex-wrap gap-4 mb-6">
                 <div className="flex items-center gap-1.5">
-                  <div className="flex items-center gap-0.5">
+                  {/* <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <FiStar
                         key={i}
                         className={`text-[14px] transition-colors ${i < fullStars ? "fill-[#c9a96e] text-[#c9a96e]" : i === fullStars && hasHalf ? "fill-[#c9a96e]/50 text-[#c9a96e]" : "text-[#d1d5db]"}`}
                       />
                     ))}
-                  </div>
-                  <span className="font-bold text-sm text-[#111827]">{ratingValue}</span>
-                  <span className="text-gray-400 text-sm">/ 5</span>
+                  </div> */}
                 </div>
 
                 {isInStock ? (

@@ -143,7 +143,6 @@ export default function ProductsPage() {
 
     if (sortBy === "low") filtered.sort((a, b) => a.price - b.price);
     if (sortBy === "high") filtered.sort((a, b) => b.price - a.price);
-    if (sortBy === "rating") filtered.sort((a, b) => b.rating - a.rating);
 
     return filtered;
   }, [products, search, selectedCategory, sortBy]);
