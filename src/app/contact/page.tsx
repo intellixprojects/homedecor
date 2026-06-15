@@ -27,14 +27,14 @@ const contactInfo = [
   {
     icon: <FiMail />,
     title: "Email Address",
-    value: "support@luxedecor.com",
+    value: "nishmee@gmail.com",
     desc: "We reply within 24 hours",
   },
   {
     icon: <FiMapPin />,
-    title: "Our Studio",
-    value: "New Delhi, India",
-    desc: "Luxury Ceramic Art Studio",
+    title: "Our Office",
+    value: "Noida, India",
+    desc: "Luxury spiritual and home decor products",
   },
   {
     icon: <FiClock />,
