@@ -12,18 +12,25 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    setError("");
-    if (!email || !password) { setError("Please fill in all fields"); return; }
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
-    if (email === "admin@nishmee.com" && password === "admin123") {
-      localStorage.setItem("isAdmin", "true");
-      router.push("/admin");
-    } else {
-      setError("Invalid email or password");
-      setLoading(false);
-    }
-  };
+  setError("");
+  if (!email || !password) { setError("Please fill in all fields"); return; }
+  setLoading(true);
+
+  const res = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    router.push("/admin");
+  } else {
+    setError("Invalid email or password");
+    setLoading(false);
+  }
+};
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleLogin();

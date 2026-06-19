@@ -41,9 +41,10 @@ export default function AdminSidebar() {
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   const handleLogout = async () => {
-    setLoggingOut(true);
-    router.push("/admin/login");
-  };
+  setLoggingOut(true);
+  await fetch("/api/admin/logout", { method: "POST" });
+  router.push("/admin/login");
+};
 
   // Expose setMobileOpen globally so AdminMobileBar can trigger it
   useEffect(() => {
