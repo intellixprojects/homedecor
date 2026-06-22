@@ -13,7 +13,7 @@ import {
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-[#0d0d0d] text-white mt-16 sm:mt-20">
-      <div className="absolute top-0 left-0 h-[220px] w-[220px] sm:h-[300px] sm:w-[300px] rounded-full bg-white/5 blur-3xl opacity-30" />
+      <div className="absolute top-0 left-0 h-55 w-55 sm:h-75 sm:w-75 rounded-full bg-white/5 blur-3xl opacity-30" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-14 border-b border-white/10 pb-12">

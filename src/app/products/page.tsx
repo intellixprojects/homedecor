@@ -62,6 +62,7 @@ export default function ProductsPage() {
   const categoryFromURL = searchParams?.get("category");
 
   const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -79,6 +80,8 @@ export default function ProductsPage() {
         }
       } catch (error) {
         console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
       }
     };
     loadProducts();
@@ -171,6 +174,22 @@ export default function ProductsPage() {
     scrollToTop();
   };
 
+  if (loading) {
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-[#e5ddd0] border-t-[#c9a96e] rounded-full animate-spin"></div>
+
+        <p className="text-sm font-medium text-gray-500 tracking-wide">
+          Loading Product...
+        </p>
+      </div>
+      <Footer />
+    </>
+  );
+}
+
   return (
     <>
       <Navbar />
@@ -237,7 +256,7 @@ export default function ProductsPage() {
                 initial="hidden"
                 animate="visible"
                 custom={0.45}
-                className="text-[14px] sm:text-[15px] text-[#6b6560] leading-[1.8] mb-2 sm:mb-2.5 md:text-right md:max-w-[360px]"
+                className="text-[14px] sm:text-[15px] text-[#6b6560] leading-[1.8] mb-2 sm:mb-2.5 md:text-right md:max-w-90"
               >
                 Discover premium ceramic and marble decor handcrafted for elegant
                 interiors, timeless beauty, and sophisticated modern living.
@@ -250,7 +269,7 @@ export default function ProductsPage() {
             <div className="flex flex-col sm:flex-row gap-3 mb-4">
 
               {/* SEARCH */}
-              <div className="flex-1 flex items-center gap-3 bg-[#f7f4ef] rounded-xl h-[48px] md:h-[52px] px-4 sm:px-[18px]">
+              <div className="flex-1 flex items-center gap-3 bg-[#f7f4ef] rounded-xl h-12 md:h-13 px-4 sm:px-4.5">
                 <FiSearch className="text-[#9a8f82]" />
                 <input
                   type="text"
@@ -265,7 +284,7 @@ export default function ProductsPage() {
               </div>
 
               {/* SORT */}
-              <div className="flex items-center gap-3 bg-[#f7f4ef] rounded-xl h-[48px] md:h-[52px] relative w-full sm:w-[210px] px-4 sm:px-[18px]">
+              <div className="flex items-center gap-3 bg-[#f7f4ef] rounded-xl h-12 md:h-13 relative w-full sm:w-52.5 px-4 sm:px-4.5">
                 <FiSliders className="text-[#9a8f82]" />
                 <select
                   value={sortBy}
@@ -313,8 +332,8 @@ export default function ProductsPage() {
           </div>
 
           {/* EMPTY STATE */}
-          {filteredProducts.length === 0 && (
-            <div className="bg-white text-center rounded-[28px] sm:rounded-[32px] px-5 sm:px-6 py-14 sm:py-16">
+          {!loading && filteredProducts.length === 0 && (
+            <div className="bg-white text-center rounded-[28px] sm:rounded-4xl px-5 sm:px-6 py-14 sm:py-16">
               <h2 className="font-bold text-black text-3xl mb-3">No Products Found</h2>
               <button
                 onClick={() => {
@@ -322,7 +341,7 @@ export default function ProductsPage() {
                   setSelectedCategory("All");
                   setSortBy("default");
                 }}
-                className="h-[50px] rounded-full px-8 font-medium bg-black text-white"
+                className="h-12.5 rounded-full px-8 font-medium bg-black text-white"
               >
                 Reset Filters
               </button>
@@ -335,7 +354,7 @@ export default function ProductsPage() {
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-[12px] px-4 border border-black/10 bg-white disabled:opacity-50"
+                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-xl px-4 border border-black/10 bg-white disabled:opacity-50"
               >
                 <FiChevronLeft size={16} />
                 Prev
@@ -348,7 +367,7 @@ export default function ProductsPage() {
                   <button
                     key={page}
                     onClick={() => goToPage(page as number)}
-                    className={`w-11 h-11 rounded-[12px] ${
+                    className={`w-11 h-11 rounded-xl ${
                       currentPage === page
                         ? "bg-black text-white"
                         : "bg-white border border-black/10"
@@ -362,7 +381,7 @@ export default function ProductsPage() {
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-[12px] px-4 border border-black/10 bg-white disabled:opacity-50"
+                className="flex items-center gap-2 font-medium text-[14px] h-11 rounded-xl px-4 border border-black/10 bg-white disabled:opacity-50"
               >
                 Next
                 <FiChevronRight size={16} />

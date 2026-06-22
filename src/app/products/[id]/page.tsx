@@ -49,6 +49,7 @@ export default function ProductDetails() {
   );
 
   const [allProducts, setAllProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -63,6 +64,8 @@ export default function ProductDetails() {
       } catch (err) {
         console.error(err);
         setAllProducts([]);
+      } finally {
+        setLoading(false);
       }
     };
     loadProducts();
@@ -87,14 +90,30 @@ export default function ProductDetails() {
     }
   }, [product]);
 
-  if (!product) {
+  if (loading) {
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-[#e5ddd0] border-t-[#c9a96e] rounded-full animate-spin"></div>
+
+        <p className="text-sm font-medium text-gray-500 tracking-wide">
+          Loading Product...
+        </p>
+      </div>
+      <Footer />
+    </>
+  );
+}
+
+  if (!loading && !product) {
     return (
       <>
         <Navbar />
         <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center px-4 text-center">
           <h1 className="text-3xl sm:text-5xl font-black text-black mb-4">Product Not Found</h1>
           <p className="text-gray-500 mb-8">This product may have been removed.</p>
-          <Link href="/products" className="h-[52px] px-8 rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#1f1f1f] transition">
+          <Link href="/products" className="h-13 px-8 rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#1f1f1f] transition">
             Back To Products
           </Link>
         </div>
@@ -206,7 +225,7 @@ export default function ProductDetails() {
             <span>/</span>
             <Link href="/products" className="hover:text-black transition">Products</Link>
             <span>/</span>
-            <span className="text-black font-medium truncate max-w-[160px]">{product.title}</span>
+            <span className="text-black font-medium truncate max-w-40">{product.title}</span>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-10 xl:gap-14 items-start">
@@ -218,7 +237,7 @@ export default function ProductDetails() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55 }}
                 onClick={() => openPreview((product.gallery || []).findIndex((img: string) => img === mainImage))}
-                className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] bg-white h-[320px] sm:h-[420px] md:h-[500px] mb-4 shadow-[0_4px_40px_rgba(0,0,0,0.08)] cursor-zoom-in group"
+                className="relative overflow-hidden rounded-3xl sm:rounded-4xl bg-white h-80 sm:h-105 md:h-125 mb-4 shadow-[0_4px_40px_rgba(0,0,0,0.08)] cursor-zoom-in group"
               >
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -280,7 +299,7 @@ export default function ProductDetails() {
                   <button
                     key={index}
                     onClick={() => { setMainImage(img); setActiveImageIndex(index); }}
-                    className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 h-[80px] sm:h-[95px] p-1 ${mainImage === img ? "border-black scale-[0.97]" : "border-transparent hover:border-gray-300"}`}
+                    className={`relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-200 h-20 sm:h-23.75 p-1 ${mainImage === img ? "border-black scale-[0.97]" : "border-transparent hover:border-gray-300"}`}
                   >
                     <div className="relative w-full h-full rounded-xl overflow-hidden">
                       <Image src={img} alt="" fill className={`object-cover ${!isInStock ? "grayscale opacity-60" : ""}`} />
@@ -349,7 +368,7 @@ export default function ProductDetails() {
                 <div className="bg-white rounded-[20px] px-5 py-4 mb-6 flex flex-col gap-4">
                   {(product.width || product.height) && (
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 min-w-[130px]">
+                      <div className="flex items-center gap-2 min-w-32.5">
                         <FiMaximize2 className="text-[#c9a96e] text-[15px]" />
                         <span className="text-[12px] font-semibold text-[#6b7280] uppercase tracking-wider">Dimensions</span>
                       </div>
@@ -363,7 +382,7 @@ export default function ProductDetails() {
                   {(product.width || product.height) && (product.length || product.weight) && <div className="h-px bg-[#f3f4f6]" />}
                   {(product.length || product.weight) && (
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 min-w-[130px]">
+                      <div className="flex items-center gap-2 min-w-32.5">
                         <FiPackage className="text-[#c9a96e] text-[15px]" />
                         <span className="text-[12px] font-semibold text-[#6b7280] uppercase tracking-wider">Weight</span>
                       </div>
@@ -377,7 +396,7 @@ export default function ProductDetails() {
 
               {/* TABS */}
               <div className="mb-7">
-                <div className="flex gap-1 bg-white rounded-[14px] w-fit p-[5px]">
+                <div className="flex gap-1 bg-white rounded-[14px] w-fit p-1.25">
                   {(["description", "shipping", "returns"] as const).map((tab) => (
                     <button
                       key={tab}
@@ -441,7 +460,7 @@ export default function ProductDetails() {
                   whileTap={isInStock ? { scale: 0.97 } : {}}
                   onClick={handleAddToCart}
                   disabled={!isInStock}
-                  className={`flex-1 h-[54px] min-w-[190px] rounded-full font-bold text-[15px] flex items-center justify-center gap-3 transition-all duration-300 ${!isInStock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : added ? "bg-emerald-600 text-white" : "bg-black text-white hover:bg-[#1f1f1f]"}`}
+                  className={`flex-1 h-13.5 min-w-47.5 rounded-full font-bold text-[15px] flex items-center justify-center gap-3 transition-all duration-300 ${!isInStock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : added ? "bg-emerald-600 text-white" : "bg-black text-white hover:bg-[#1f1f1f]"}`}
                 >
                   {!isInStock ? <><FiXCircle /> Out of Stock</> : added ? <><FiCheck /> Added to Cart!</> : <><FiShoppingBag /> Add to Cart</>}
                 </motion.button>
@@ -462,7 +481,7 @@ export default function ProductDetails() {
                     );
                     router.push("/checkout");
                   }}
-                  className={`h-[54px] rounded-full font-bold text-[15px] transition-all duration-300 px-7 w-full sm:w-auto ${!isInStock ? "border-2 border-gray-200 text-gray-400 cursor-not-allowed bg-white" : "border-2 border-black hover:bg-black hover:text-white"}`}
+                  className={`h-13.5 rounded-full font-bold text-[15px] transition-all duration-300 px-7 w-full sm:w-auto ${!isInStock ? "border-2 border-gray-200 text-gray-400 cursor-not-allowed bg-white" : "border-2 border-black hover:bg-black hover:text-white"}`}
                 >
                   Buy Now
                 </button>
@@ -493,7 +512,7 @@ export default function ProductDetails() {
                   <p className="uppercase tracking-[4px] text-[11px] text-[#c9a96e] font-semibold mb-3">More Collection</p>
                   <h2 className="text-3xl sm:text-5xl font-black text-black">Related Products</h2>
                 </div>
-                <Link href="/products" className="hidden sm:flex h-[50px] px-7 rounded-full border border-black items-center justify-center font-semibold hover:bg-black hover:text-white transition">
+                <Link href="/products" className="hidden sm:flex h-12.5 px-7 rounded-full border border-black items-center justify-center font-semibold hover:bg-black hover:text-white transition">
                   View All
                 </Link>
               </div>
@@ -516,7 +535,7 @@ export default function ProductDetails() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+              className="fixed inset-0 z-999 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
             >
               <button onClick={() => setPreviewOpen(false)} className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white text-black flex items-center justify-center hover:rotate-90 transition duration-300 z-20">
                 <FiX size={20} />
