@@ -32,7 +32,7 @@ import { clearCartState } from "@/store/features/cartSlice";
 import { clearWishlistState } from "@/store/features/wishlistSlice";
 
 const navLinks = [
-  { name: "Homepage", href: "/" },
+  { name: "Home", href: "/" },
 
   {
     name: "Spiritual Decor",
