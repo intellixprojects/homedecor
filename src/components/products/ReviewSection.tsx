@@ -322,7 +322,6 @@ export default function ReviewSection({ productId }: { productId: string }) {
         </div>
       ) : reviews.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-[22px]">
-          <p className="text-[32px] mb-3">✍️</p>
           <p className="font-bold text-black text-[15px] mb-1">No reviews yet</p>
           <p className="text-gray-400 text-[13px] mb-4">Be the first to share your experience</p>
           <button
