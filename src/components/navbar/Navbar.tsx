@@ -107,7 +107,6 @@ export default function Navbar() {
   }, []);
 
   /* FETCH CATEGORIES FROM DB — GROUP KARKE NAVBAR BANAO */
-  /* FETCH CATEGORIES FROM DB — EXISTING GROUPS MEIN ADD KARO */
 useEffect(() => {
   const fetchCategories = async () => {
     try {
@@ -240,7 +239,7 @@ useEffect(() => {
             </Link>
 
             {/* DESKTOP NAV */}
-            <nav className="hidden lg:flex items-center gap-7 xl:gap-10 ml-44">
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8 ml-44">
               {navLinks.map((link: any) =>
                 link.dropdown ? (
                   <div
