@@ -106,26 +106,10 @@ export default function ProductsPage() {
 
   // CATEGORY FROM URL
   useEffect(() => {
-    if (categoryFromURL) {
-      const formattedCategory =
-        categoryFromURL === "vases"
-          ? "Vases"
-          : categoryFromURL === "showpieces"
-          ? "Showpieces"
-          : categoryFromURL === "idols"
-          ? "Handcraft Idols"
-          : categoryFromURL === "buddha-monk"
-          ? "Buddha & Monk"
-          : categoryFromURL === "luxury-sculptures"
-          ? "Luxury Sculptures"
-          : categoryFromURL === "divine"
-          ? "Divine Collection"
-          : categoryFromURL === "ganesh"
-          ? "Divine Collection"
-          : "All";
-      setSelectedCategory(formattedCategory);
-    }
-  }, [categoryFromURL]);
+  if (categoryFromURL) {
+    setSelectedCategory(decodeURIComponent(categoryFromURL));
+  }
+}, [categoryFromURL]);
 
   // FILTERED PRODUCTS
   const filteredProducts = useMemo(() => {
