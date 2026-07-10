@@ -36,7 +36,6 @@ import { RootState } from "@/store/store";
 import { addToCart } from "@/store/features/cartSlice";
 import { addToWishlist, removeFromWishlist } from "@/store/features/wishlistSlice";
 
-import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -91,19 +90,19 @@ export default function ProductDetails() {
   }, [product]);
 
   if (loading) {
-  return (
-    <>
-      <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center gap-4">
-        <div className="w-12 h-12 border-4 border-[#e5ddd0] border-t-[#c9a96e] rounded-full animate-spin"></div>
+    return (
+      <>
+        <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#e5ddd0] border-t-[#c9a96e] rounded-full animate-spin"></div>
 
-        <p className="text-sm font-medium text-gray-500 tracking-wide">
-          Loading Product...
-        </p>
-      </div>
-      <Footer />
-    </>
-  );
-}
+          <p className="text-sm font-medium text-gray-500 tracking-wide">
+            Loading Product...
+          </p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   if (!loading && !product) {
     return (
@@ -124,7 +123,9 @@ export default function ProductDetails() {
   const isLowStock = isInStock && product.stock != null && product.stock <= 5;
   const maxQty = product.stock != null ? product.stock : 999;
 
-  const isWished = wishlistItems.some((item: any) => item._id === product._id);
+  const isWished = wishlistItems.some(
+    (item: any) => item.id === (product._id || product.id)
+  );
 
   const relatedProducts = allProducts.filter(
     (item: any) => item.category === product.category && item._id !== product._id
@@ -522,8 +523,8 @@ export default function ProductDetails() {
           )}
         </div>
 
-         {/* REVIEWS */}
-          {params?.id && <ReviewSection productId={params.id as string} />}
+        {/* REVIEWS */}
+        {params?.id && <ReviewSection productId={params.id as string} />}
 
         {/* IMAGE POPUP */}
         <AnimatePresence>
