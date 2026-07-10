@@ -17,6 +17,7 @@ import {
   FiSearch,
   FiInbox,
 } from "react-icons/fi";
+import { group } from "console";
 
 type CategoryStat = {
   name: string;
@@ -30,6 +31,7 @@ type CategoryStat = {
 type DbCategory = {
   _id: string;
   name: string;
+  group: string;
 };
 
 const COLORS = [
@@ -94,6 +96,7 @@ export default function AdminCategoriesPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editCategory, setEditCategory] = useState<string | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryGroup, setNewCategoryGroup] = useState("");
   const [error, setError] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -176,9 +179,9 @@ export default function AdminCategoriesPage() {
   );
 
   const openAdd = () => { setShowAddModal(true); setNewCategoryName(""); setError(""); };
-  const closeModal = () => { setShowAddModal(false); setEditCategory(null); setError(""); };
+  const closeModal = () => { setShowAddModal(false); setEditCategory(null); setError(""); setNewCategoryGroup(""); };
 
-  // ✅ ADD CATEGORY — MongoDB me save
+  // ADD CATEGORY — MongoDB me save
   const handleAddCategory = async () => {
     const name = newCategoryName.trim();
     if (!name) { setError("Category name is required."); return; }
@@ -187,7 +190,7 @@ export default function AdminCategoriesPage() {
       const res = await fetch("/api/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, group: newCategoryGroup.trim() }),
       });
       const data = await res.json();
 
@@ -202,7 +205,7 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  // ✅ RENAME CATEGORY — MongoDB me update
+  // RENAME CATEGORY — MongoDB me update
   const handleRename = async () => {
     const name = newCategoryName.trim();
     if (!name) { setError("Name is required."); return; }
@@ -214,7 +217,7 @@ export default function AdminCategoriesPage() {
       const res = await fetch(`/api/categories/${dbCat._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, group: newCategoryGroup.trim() }),
       });
       const data = await res.json();
 
@@ -229,7 +232,7 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  // ✅ DELETE CATEGORY — MongoDB se delete
+  // DELETE CATEGORY — MongoDB se delete
   const handleDelete = async (name: string) => {
     const dbCat = dbCategories.find((c) => c.name === name);
     if (!dbCat) {
@@ -335,8 +338,8 @@ export default function AdminCategoriesPage() {
           {loading
             ? Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
             : filtered.length === 0
-            ? <EmptyState query={search} onAdd={openAdd} />
-            : filtered.map((cat, i) => {
+              ? <EmptyState query={search} onAdd={openAdd} />
+              : filtered.map((cat, i) => {
                 const pct = totalProducts > 0 ? Math.round((cat.count / totalProducts) * 100) : 0;
 
                 return (
@@ -375,7 +378,14 @@ export default function AdminCategoriesPage() {
                         {openMenuId === cat.name && (
                           <div className="absolute right-0 top-11 z-50 w-[180px] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
                             <button
-                              onClick={() => { setEditCategory(cat.name); setNewCategoryName(cat.name); setError(""); setOpenMenuId(null); }}
+                              onClick={() => {
+                                const dbCat = dbCategories.find((c) => c.name === cat.name);
+                                setEditCategory(cat.name);
+                                setNewCategoryName(cat.name);
+                                setNewCategoryGroup(dbCat?.group || "");
+                                setError("");
+                                setOpenMenuId(null);
+                              }}
                               className="flex w-full items-center gap-3 px-4 py-3 text-[13px] font-medium text-[#111827] hover:bg-[#f3f4f6] transition-colors"
                             >
                               <FiEdit2 className="text-[14px] text-[#6b7280]" /> Rename
@@ -463,6 +473,14 @@ export default function AdminCategoriesPage() {
               onKeyDown={(e) => e.key === "Enter" && (editCategory ? handleRename() : handleAddCategory())}
               className="h-[48px] w-full rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-4 text-[14px] outline-none focus:border-[#111827] transition"
               autoFocus
+            />
+
+            <input
+              type="text"
+              placeholder="Group name (e.g. Home Decor, Spiritual Decor)"
+              value={newCategoryGroup}
+              onChange={(e) => { setNewCategoryGroup(e.target.value); }}
+              className="mt-3 h-[48px] w-full rounded-2xl border border-[#e5e7eb] bg-[#fafafa] px-4 text-[14px] outline-none focus:border-[#111827] transition"
             />
             {error && <p className="mt-2 text-[12px] text-red-500">{error}</p>}
 

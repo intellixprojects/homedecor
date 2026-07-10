@@ -1,4 +1,3 @@
-// src/store/features/productSlice.ts
 "use client";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";

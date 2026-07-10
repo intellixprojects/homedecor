@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { name } = await req.json();
+    const { name, group } = await req.json();
     if (!name) {
       return NextResponse.json(
         { success: false, message: "Name is required" },
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const category = await Category.create({ name });
+    const category = await Category.create({ name, group: group || "" });
     return NextResponse.json({ success: true, category });
   } catch (error) {
     return NextResponse.json(

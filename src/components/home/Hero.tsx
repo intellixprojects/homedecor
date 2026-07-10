@@ -34,7 +34,7 @@ export default function Hero() {
               <span className="w-8 h-px bg-[#d6bfa7]" />
 
               <p className="uppercase tracking-[4px] text-[10px] sm:text-xs text-[#d6bfa7] font-semibold">
-                Luxury & Spiritual Decor
+                Luxury Decor • Corporate Gifts
               </p>
 
               <span className="w-8 h-px bg-[#d6bfa7]" />
@@ -42,22 +42,20 @@ export default function Hero() {
 
             {/* Heading */}
             <h1 className="text-white font-black leading-[1.05] text-3xl sm:text-4xl md:text-5xl lg:text-[56px] max-w-xl mx-auto lg:mx-0">
-              Luxury Meets
+              Where Luxury
 
               <span className="block text-[#e7d9c9] mt-1">
-                Spirituality
+                Meets Lifestyle
               </span>
 
               <span className="block text-[#e7d9c9]">
-                For Modern Homes
+                & Meaningful Gifting
               </span>
             </h1>
 
             {/* Description */}
             <p className="mt-6 text-sm sm:text-base lg:text-lg leading-7 sm:leading-8 text-white/75 max-w-xl mx-auto lg:mx-0">
-              Discover handcrafted decor, divine idols, luxury sculptures,
-              wall art and timeless pieces designed to bring elegance,
-              positivity and style to every corner of your home.
+              Discover handcrafted spiritual decor, elegant home accents, premium sculptures, and thoughtfully curated corporate gifts designed to inspire, impress, and leave a lasting impression.
             </p>
 
             {/* Buttons */}

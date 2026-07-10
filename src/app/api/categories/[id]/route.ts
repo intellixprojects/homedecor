@@ -9,9 +9,9 @@ export async function PUT(
   try {
     await connectDB();
     const { id } = await params;
-    const { name } = await req.json();
+    const { name, group } = await req.json();
     const category = await Category.findByIdAndUpdate(
-      id, { name }, { new: true }
+      id, { name, group: group || "" }, { new: true }
     );
     if (!category) {
       return NextResponse.json(

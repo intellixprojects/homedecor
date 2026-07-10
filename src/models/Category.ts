@@ -8,6 +8,11 @@ const CategorySchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    group: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   { timestamps: true }
 );

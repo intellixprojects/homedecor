@@ -21,6 +21,7 @@ export async function GET() {
       }
     });
   } catch (error) {
+    console.log("Product error:", error);
     return NextResponse.json(
       {
         success: false,

@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     // ── ORDER CONFIRMATION EMAIL ──
     await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: "developeru0011@gmail.com",
+      to: "intellixprojects@gmail.com",
       subject: `Order Confirmed! #${orderId} - Nishmee Store`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f5f0;">
