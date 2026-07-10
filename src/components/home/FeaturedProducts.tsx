@@ -78,9 +78,7 @@ export default function FeaturedProducts() {
               className="text-[#6b7280] leading-[1.8] max-w-[520px]"
               style={{ fontSize: "15px" }}
             >
-              Explore premium ceramic vases, marble dust decor,
-              luxury mugs, handcrafted idols, hanging plates,
-              wall decor, and elegant decorative pieces crafted
+              Explore premium ceramic vases, marble dust decor, handcrafted idols and elegant decorative pieces crafted
               for timeless interiors.
             </p>
           </div>
