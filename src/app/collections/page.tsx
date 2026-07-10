@@ -46,7 +46,6 @@ const collections = [
 export default function CollectionsPage() {
   return (
     <>
-      <Navbar />
 
       <section className="bg-[#f8f5f0] overflow-hidden">
 

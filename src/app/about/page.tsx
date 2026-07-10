@@ -50,7 +50,6 @@ const highlights = [
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
 
       <main className="bg-[#f8f5f0] overflow-hidden">
 

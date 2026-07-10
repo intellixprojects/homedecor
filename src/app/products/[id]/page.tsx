@@ -93,7 +93,6 @@ export default function ProductDetails() {
   if (loading) {
   return (
     <>
-      <Navbar />
       <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-[#e5ddd0] border-t-[#c9a96e] rounded-full animate-spin"></div>
 
@@ -109,7 +108,6 @@ export default function ProductDetails() {
   if (!loading && !product) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center px-4 text-center">
           <h1 className="text-3xl sm:text-5xl font-black text-black mb-4">Product Not Found</h1>
           <p className="text-gray-500 mb-8">This product may have been removed.</p>
@@ -214,7 +212,6 @@ export default function ProductDetails() {
 
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-20 sm:pb-24">

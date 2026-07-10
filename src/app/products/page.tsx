@@ -11,7 +11,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
-import Navbar from "@/components/navbar/Navbar";
+// import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -161,7 +161,6 @@ export default function ProductsPage() {
   if (loading) {
   return (
     <>
-      <Navbar />
       <div className="min-h-screen bg-[#f8f5f0] flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-[#e5ddd0] border-t-[#c9a96e] rounded-full animate-spin"></div>
 
@@ -176,7 +175,6 @@ export default function ProductsPage() {
 
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-16 sm:pb-20">

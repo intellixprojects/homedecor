@@ -88,7 +88,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen overflow-hidden bg-[#f8f5f0]">
 

@@ -103,7 +103,6 @@ export default function OrdersPage() {
 
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0] pb-16 pt-[115px]">
         <div className="mx-auto max-w-6xl px-4 sm:px-5">

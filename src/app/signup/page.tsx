@@ -153,7 +153,6 @@ export default function SignupPage() {
 
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen overflow-hidden bg-[#f8f5f0]">
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 pb-16 pt-[110px] sm:px-6 md:gap-14 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:pb-20">

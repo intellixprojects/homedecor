@@ -107,7 +107,6 @@ export default function ProfilePage() {
   if (!currentUser) {
     return (
       <>
-        <Navbar />
         <section className="min-h-screen bg-[#f8f5f0] flex items-center justify-center px-5">
           <div className="bg-white w-full max-w-md text-center rounded-[30px] px-8 py-14">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#f8f5f0]">
@@ -165,7 +164,6 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0] pt-28 pb-20 px-4 sm:px-6">
         <div className="max-w-xl mx-auto space-y-4">

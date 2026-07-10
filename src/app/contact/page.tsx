@@ -90,7 +90,6 @@ export default function ContactPage() {
   };
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-16 sm:pb-20">

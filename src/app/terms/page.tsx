@@ -119,7 +119,6 @@ const sections = [
 export default function TermsAndConditionsPage() {
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0]">
 

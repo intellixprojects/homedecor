@@ -158,7 +158,7 @@ export default function Categories() {
                   <div className="flex-1 h-[1px] bg-white/20" />
 
                   <motion.button
-                    onClick={() => router.push(`/products?category=${item.slug}`)}
+                    onClick={() => router.push(`/products?category=${encodeURIComponent(item.title)}`)}
                     variants={{
                       hover: {
                         backgroundColor: "#b8a07a",

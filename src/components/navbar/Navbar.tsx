@@ -25,6 +25,7 @@ import { RootState } from "@/store/store";
 import { logout } from "@/store/features/authSlice";
 import { clearCartState } from "@/store/features/cartSlice";
 import { clearWishlistState } from "@/store/features/wishlistSlice";
+import { usePathname } from "next/navigation";
 
 // Static links jo hamesha rahenge
 const staticLinks = [
@@ -38,9 +39,42 @@ const profileMenuItems = [
   { name: "Order History", href: "/orders", icon: FiPackage },
 ];
 
-export default function Navbar() {
+type CategoryItem = {
+  _id: string;
+  name: string;
+  group: string;
+};
+
+function buildGroups(categories: CategoryItem[]) {
+  const baseGroups: Record<string, { name: string; href: string }[]> = {
+    "Spiritual Decor": [],
+    "Home Decor": [],
+  };
+
+  categories.forEach((cat) => {
+    const group = cat.group?.trim();
+    const href = `/products?category=${encodeURIComponent(cat.name)}`;
+    if (group && baseGroups[group] !== undefined) {
+      baseGroups[group].push({ name: cat.name, href });
+    } else if (group && group !== "") {
+      if (!baseGroups[group]) baseGroups[group] = [];
+      baseGroups[group].push({ name: cat.name, href });
+    }
+  });
+
+  return Object.entries(baseGroups)
+    .filter(([_, items]) => items.length > 0)
+    .map(([name, dropdown]) => ({ name, dropdown }));
+}
+
+export default function Navbar({
+  initialCategories = [],
+}: {
+  initialCategories?: CategoryItem[];
+}) {
   const dispatch = useDispatch();
   const router = useRouter();
+  const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -53,9 +87,9 @@ export default function Navbar() {
 
   // DYNAMIC NAV — groups + categories from DB
   const [navGroups, setNavGroups] = useState<Array<{
-  name: string;
-  dropdown: Array<{ name: string; href: string }>;
-}>>([]);
+    name: string;
+    dropdown: Array<{ name: string; href: string }>;
+  }>>(() => buildGroups(initialCategories));
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -107,42 +141,13 @@ export default function Navbar() {
   }, []);
 
   /* FETCH CATEGORIES FROM DB — GROUP KARKE NAVBAR BANAO */
-useEffect(() => {
+  useEffect(() => {
   const fetchCategories = async () => {
     try {
       const res = await fetch("/api/categories", { cache: "no-store" });
       const data = await res.json();
       if (!data.success) return;
-
-      const categories: { name: string; group: string }[] = data.categories;
-
-      // Hardcoded base groups — yahi purani structure hai
-      const baseGroups: Record<string, { name: string; href: string }[]> = {
-        "Spiritual Decor": [],
-        "Home Decor": [],
-      };
-
-      categories.forEach((cat) => {
-        const group = cat.group?.trim();
-        const href = `/products?category=${encodeURIComponent(cat.name)}`;
-
-        if (group && baseGroups[group] !== undefined) {
-          // Existing group mein add karo
-          baseGroups[group].push({ name: cat.name, href });
-        } else if (group && group !== "") {
-          // Nayi group hai toh usse bhi add karo
-          if (!baseGroups[group]) baseGroups[group] = [];
-          baseGroups[group].push({ name: cat.name, href });
-        }
-        // Agar group empty hai toh ignore karo — "Other" nahi aayega
-      });
-
-      // Sirf woh groups dikhao jinmein kuch categories hain
-      const groups = Object.entries(baseGroups)
-        .filter(([_, items]) => items.length > 0)
-        .map(([name, dropdown]) => ({ name, dropdown }));
-
-      setNavGroups(groups);
+      setNavGroups(buildGroups(data.categories));
     } catch (err) {
       console.error("Failed to fetch categories", err);
     }
@@ -199,6 +204,8 @@ useEffect(() => {
     setMobileOpen(false);
     router.push("/login");
   };
+
+  if(pathname?.startsWith("/admin")) return null;
 
   return (
     <>

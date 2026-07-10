@@ -19,7 +19,6 @@ import Footer from "@/components/footer/Footer";
 export default function SuccessPage() {
   return (
     <>
-      <Navbar />
 
       <section className="min-h-screen bg-[#f8f5f0] pt-[100px] pb-[50px] px-4">
 
