@@ -34,7 +34,7 @@ const contactInfo = [
   {
     icon: <FiMapPin />,
     title: "Our Office",
-    value: "Noida, India",
+    value: "Noida Sec-63,India",
     desc: "Luxury spiritual and home decor products",
   },
   {
