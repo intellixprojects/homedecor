@@ -22,13 +22,13 @@ const contactInfo = [
   {
     icon: <FiPhone />,
     title: "Call Us",
-    value: "+91 98765 43210",
+    value: "+91 9818185270",
     desc: "Mon to Sat • 10AM to 7PM",
   },
   {
     icon: <FiMail />,
     title: "Email Address",
-    value: "nishmee@gmail.com",
+    value: "info@nishmee.in",
     desc: "We reply within 24 hours",
   },
   {

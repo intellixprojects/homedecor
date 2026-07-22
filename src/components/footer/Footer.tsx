@@ -118,8 +118,8 @@ export default function Footer() {
 
             <div className="flex flex-col gap-4 mb-8">
               {[
-                { icon: FiMail, text: "hello@nishmee.com" },
-                { icon: FiPhone, text: "+91 98765 43210" },
+                { icon: FiMail, text: "info@nishmee.in" },
+                { icon: FiPhone, text: "+91 9818185270" },
                 { icon: FiMapPin, text: "Fast & Secure Delivery" },
               ].map(({ icon: Icon, text }) => (
                 <div
