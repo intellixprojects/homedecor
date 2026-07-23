@@ -193,7 +193,7 @@ export default function CheckoutPage() {
             } else {
               alert(
                 "Order save failed. Contact support with payment ID: " +
-                  response.razorpay_payment_id,
+                response.razorpay_payment_id,
               );
             }
           } catch (err) {
@@ -321,16 +321,14 @@ export default function CheckoutPage() {
                   {step === "Cart" ? (
                     <Link
                       href="/cart"
-                      className={`flex items-center gap-1.5 transition-colors hover:text-[#c9a96e] ${
-                        i <= 1 ? "text-black" : "text-[#c4b8a8]"
-                      }`}
+                      className={`flex items-center gap-1.5 transition-colors hover:text-[#c9a96e] ${i <= 1 ? "text-black" : "text-[#c4b8a8]"
+                        }`}
                     >
                       <div
-                        className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                          i <= 1
+                        className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${i <= 1
                             ? "bg-black text-white"
                             : "bg-[#e8e0d4] text-[#a89880]"
-                        }`}
+                          }`}
                       >
                         <FiCheck size={10} />
                       </div>
@@ -339,16 +337,14 @@ export default function CheckoutPage() {
                     </Link>
                   ) : (
                     <div
-                      className={`flex items-center gap-1.5 ${
-                        i <= 1 ? "text-black" : "text-[#c4b8a8]"
-                      }`}
+                      className={`flex items-center gap-1.5 ${i <= 1 ? "text-black" : "text-[#c4b8a8]"
+                        }`}
                     >
                       <div
-                        className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                          i <= 1
+                        className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${i <= 1
                             ? "bg-black text-white"
                             : "bg-[#e8e0d4] text-[#a89880]"
-                        }`}
+                          }`}
                       >
                         {i <= 1 ? <FiCheck size={10} /> : i + 1}
                       </div>
@@ -560,11 +556,10 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("razorpay")}
-                    className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-[12px] font-bold transition-all ${
-                      paymentMethod === "razorpay"
+                    className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-[12px] font-bold transition-all ${paymentMethod === "razorpay"
                         ? "bg-white text-[#111827] shadow-sm"
                         : "text-[#a89880]"
-                    }`}
+                      }`}
                   >
                     <FiCreditCard size={13} />
                     Pay Online
@@ -572,45 +567,36 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("cod")}
-                    className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-[12px] font-bold transition-all ${
-                      paymentMethod === "cod"
+                    className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-[12px] font-bold transition-all ${paymentMethod === "cod"
                         ? "bg-white text-[#111827] shadow-sm"
                         : "text-[#a89880]"
-                    }`}
+                      }`}
                   >
                     <FiSmartphone size={13} />
                     Cash On Delivery
                   </button>
                 </div>
 
-                {paymentMethod === "razorpay" && (
+                {/* {paymentMethod === "razorpay" && (
                   <p className="mb-4 text-center text-[11px] font-semibold text-amber-600">
                     Test Mode — Card: 4718 6000 0000 0002 | 12/26 | CVV 123 |
                     OTP 1234
                   </p>
-                )}
+                )} */}
 
                 <motion.button
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handlePlaceOrder}
-                  disabled={processing}
-                  className="mb-4.5 flex h-15 w-full items-center justify-center gap-3 rounded-full bg-[#c9a96e] text-[15px] font-extrabold text-black transition-all duration-300 hover:bg-[#b8955a] disabled:opacity-70 disabled:cursor-not-allowed"
+                  disabled
+                  className="mb-4.5 flex h-15 w-full cursor-not-allowed items-center justify-center gap-3 rounded-full bg-gray-300 text-[15px] font-extrabold text-gray-600 opacity-90"
                 >
-                  {processing ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <FiLock size={15} />
-                      {paymentMethod === "razorpay"
-                        ? "Pay Now ₹" + total
-                        : "Place Order"}
-                    </>
-                  )}
+                  <FiLock size={15} />
+                   Ordering Coming Soon
                 </motion.button>
+
+                <p className="text-center text-[12px] font-medium text-[#a89880]">
+                  Orders will be available very soon.
+                </p>
 
                 <div className="flex flex-wrap items-center justify-center gap-5">
                   <div className="flex items-center gap-2 text-[12px] font-semibold text-[#a89880]">
