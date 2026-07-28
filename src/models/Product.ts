@@ -71,6 +71,21 @@ const ProductSchema = new Schema(
       type: String,
       default: "",
     },
+
+    isBestSeller: {
+      type: Boolean,
+      default: false,
+    },
+
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+
+    featuredAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

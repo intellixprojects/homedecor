@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { FiArrowUpRight } from "react-icons/fi";
+import { FiArrowUpRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import ProductCard from "../products/ProductCard";
 
 const containerVariants = {
@@ -27,6 +27,9 @@ const itemVariants = {
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<any[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,7 +37,13 @@ export default function FeaturedProducts() {
         const res = await fetch("/api/products", { cache: "no-store" });
         const data = await res.json();
         if (data.success) {
-          setProducts(data.products);
+          const featured = data.products
+            .filter((p: any) => p.isFeatured)
+            .sort(
+              (a: any, b: any) =>
+                new Date(a.featuredAt).getTime() - new Date(b.featuredAt).getTime()
+            );
+          setProducts(featured);
         }
       } catch (err) {
         console.error(err);
@@ -42,6 +51,39 @@ export default function FeaturedProducts() {
     };
     fetchProducts();
   }, []);
+
+  const updateScrollButtons = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    updateScrollButtons();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateScrollButtons);
+    window.addEventListener("resize", updateScrollButtons);
+    return () => {
+      el.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [products]);
+
+  const scroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.querySelector("[data-card]")?.clientWidth || 280;
+    const gap = 24;
+    const scrollAmount = (cardWidth + gap) * 2;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  if (products.length === 0) return null;
 
   return (
     <section
@@ -97,22 +139,69 @@ export default function FeaturedProducts() {
           </Link>
         </div>
 
-        {/* Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {products.slice(0, 8).map((product) => (
-            <motion.div key={product._id || product.id} variants={itemVariants}>
-              <ProductCard product={product} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Slider with floating side arrows */}
+        <div className="relative">
+
+          {/* Left Arrow — floats on left edge of products */}
+         {/* Left Arrow */}
+          {canScrollLeft && (
+            <button
+              onClick={() => scroll("left")}
+              className="absolute left-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[#111827] shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-all duration-300 hover:bg-[#111827] hover:text-white hover:scale-105"
+            >
+              <FiChevronLeft className="text-[20px]" />
+            </button>
+          )}
+
+          {/* Right Arrow */}
+          {canScrollRight && (
+            <button
+              onClick={() => scroll("right")}
+              className="absolute right-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[#111827] shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-all duration-300 hover:bg-[#111827] hover:text-white hover:scale-105"
+            >
+              <FiChevronRight className="text-[20px]" />
+            </button>
+          )}
+
+          <motion.div
+            ref={scrollRef}
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            className="flex gap-6 overflow-x-auto scroll-smooth pb-2"
+            style={{
+              scrollSnapType: "x mandatory",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {products.map((product) => (
+              <motion.div
+                key={product._id || product.id}
+                data-card
+                variants={itemVariants}
+                className="flex-shrink-0"
+                style={{
+                  scrollSnapAlign: "start",
+                  width: "280px",
+                }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
+            ))}
+          </motion.div>
+
+        </div>
 
       </div>
+
+      {/* hide scrollbar (webkit) */}
+      <style jsx>{`
+        section :global(.overflow-x-auto::-webkit-scrollbar) {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }

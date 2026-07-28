@@ -587,15 +587,26 @@ export default function CheckoutPage() {
                 <motion.button
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  disabled
-                  className="mb-4.5 flex h-15 w-full cursor-not-allowed items-center justify-center gap-3 rounded-full bg-gray-300 text-[15px] font-extrabold text-gray-600 opacity-90"
+                  onClick={handlePlaceOrder}
+                  disabled={processing}
+                  className={`mb-4.5 flex h-15 w-full items-center justify-center gap-3 rounded-full text-[15px] font-extrabold transition-all duration-300 ${
+                    processing
+                      ? "cursor-not-allowed bg-gray-300 text-gray-600 opacity-90"
+                      : "bg-black text-white hover:bg-[#1f1f1f]"
+                  }`}
                 >
-                  <FiLock size={15} />
-                   Ordering Coming Soon
+                  {processing ? (
+                    "Processing..."
+                  ) : (
+                    <>
+                      <FiLock size={15} />
+                      {paymentMethod === "razorpay" ? "Pay Now" : "Place Order"}
+                    </>
+                  )}
                 </motion.button>
 
                 <p className="text-center text-[12px] font-medium text-[#a89880]">
-                  Orders will be available very soon.
+                  Safe & secure checkout, encrypted payments.
                 </p>
 
                 <div className="flex flex-wrap items-center justify-center gap-5">

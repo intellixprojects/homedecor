@@ -12,6 +12,8 @@ import {
   FiMail,
   FiLock,
   FiArrowRight,
+   FiEye,
+  FiEyeOff,
 } from "react-icons/fi";
 
 import Navbar from "@/components/navbar/Navbar";
@@ -28,6 +30,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
 
   const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -172,16 +176,24 @@ export default function LoginPage() {
               {/* Password */}
               <div className="mb-4">
 
-                <label className="mb-2.5 block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
-                  Password
-                </label>
+                <div className="mb-2.5 flex items-center justify-between">
+                  <label className="block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
+                    Password
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-[12px] font-semibold text-[#c9a96e] hover:text-black transition sm:text-[13px]"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
 
                 <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:rounded-[18px] sm:px-5">
 
                   <FiLock className="shrink-0 text-[18px] text-gray-400" />
 
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="w-full bg-transparent text-[14px] text-black outline-none placeholder:text-gray-400 sm:text-[15px]"
                     value={password}
@@ -195,18 +207,21 @@ export default function LoginPage() {
                     }}
                   />
 
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="shrink-0 text-gray-400 hover:text-black transition-colors duration-200"
+                  >
+                    {showPassword ? (
+                      <FiEyeOff className="text-[18px]" />
+                    ) : (
+                      <FiEye className="text-[18px]" />
+                    )}
+                  </button>
+
                 </div>
 
               </div>
-
-              {/* Forgot Password */}
-              {/* <div className="mb-7 flex justify-end sm:mb-8">
-
-                <button className="text-[13px] font-medium text-gray-500 transition hover:text-black sm:text-sm">
-                  Forgot Password?
-                </button>
-
-              </div> */}
 
               {/* Login Button */}
               <motion.button

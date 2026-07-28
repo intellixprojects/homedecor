@@ -30,7 +30,7 @@ export default function WishlistPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-20 sm:pb-24">
 
           {/* ── Top Section ── */}
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-8 sm:mb-9">
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-8 sm:mb-1">
             <div>
               <Link
                 href="/products"
@@ -39,25 +39,8 @@ export default function WishlistPage() {
                 <FiArrowLeft className="text-sm" />
                 Continue Shopping
               </Link>
-
-              <div className="flex items-center gap-3">
-                {/* Icon */}
-                <div className="w-11 h-11 sm:w-[52px] sm:h-[52px] bg-black text-white text-lg sm:text-xl rounded-full flex items-center justify-center shrink-0">
-                  <FiHeart />
-                </div>
-
-                {/* Text */}
-                <div>
-                  <p className="uppercase tracking-[3px] text-gray-400 font-medium text-[10px] mb-1">
-                    Saved Products
-                  </p>
-                  <h1 className="font-black text-[#111827] leading-none text-[clamp(28px,4vw,42px)]">
-                    My Wishlist
-                  </h1>
-                </div>
-              </div>
             </div>
-
+ 
             {wishlistItems.length > 0 && (
               <button
                 onClick={() => dispatch(clearWishlist())}
@@ -75,6 +58,10 @@ export default function WishlistPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white text-center rounded-[28px] sm:rounded-[40px] px-5 sm:px-8 py-16 sm:py-20 lg:py-24 shadow-[0_10px_40px_rgba(0,0,0,0.05)]"
             >
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f8f5f0] flex items-center justify-center mx-auto mb-6">
+                <FiHeart className="text-[26px] sm:text-[32px] text-[#c9a96e]" />
+              </div>
+
               <h2 className="font-black text-[#111827] text-[clamp(34px,5vw,52px)] mb-4 sm:mb-5">
                 Your Wishlist Is Empty
               </h2>
@@ -100,88 +87,114 @@ export default function WishlistPage() {
                   <h2 className="font-bold text-black text-[22px] sm:text-[28px]">
                     {wishlistItems.length} Saved Products
                   </h2>
-                  <p className="text-gray-500 mt-1.5">
-                    Luxury handcrafted pieces saved for your collection.
-                  </p>
                 </div>
               </div>
 
               {/* ── Wishlist Grid ── */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-7">
-                {wishlistItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 35 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.45, delay: index * 0.08 }}
-                    className="group bg-white overflow-hidden relative rounded-[24px] sm:rounded-[32px] p-3 sm:p-[14px] shadow-[0_10px_35px_rgba(0,0,0,0.06)]"
-                  >
-                    {/* Product Image */}
-                    <Link href={`/products/${item.id}`}>
-                      <div className="relative overflow-hidden bg-[#f8f5f0] h-[240px] sm:h-[280px] lg:h-[300px] rounded-[18px] sm:rounded-[24px] mb-4 sm:mb-5">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover group-hover:scale-110 transition duration-700"
-                        />
+                {wishlistItems.map((item, index) => {
+                  const discount =
+                    item.oldPrice && item.oldPrice > item.price
+                      ? Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)
+                      : 0;
 
-                        {/* Remove Button */}
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            dispatch(removeFromWishlist(item.id));
-                          }}
-                          className="absolute top-3.5 right-3.5 w-10 h-10 sm:w-[42px] sm:h-[42px] rounded-full bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center justify-center shadow-lg"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </div>
-                    </Link>
-
-                    {/* Content */}
-                    <div className="px-1.5 pb-1.5">
-                      <p className="uppercase tracking-[3px] text-[#c9a96e] font-semibold text-[11px] mb-2.5">
-                        {item.category}
-                      </p>
-
-                      <Link href={`/products/${item.id}`}>
-                        <h3 className="font-bold text-[#111827] hover:text-black transition leading-snug text-[18px] sm:text-[20px] lg:text-[22px] mb-3.5">
-                          {item.title}
-                        </h3>
-                      </Link>
-
-                      {/* Price */}
-                      <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                        <span className="text-2xl sm:text-3xl font-black text-black">
-                          ${item.price}
-                        </span>
-                        <span className="text-base sm:text-lg text-gray-400 line-through">
-                          ${item.oldPrice}
-                        </span>
-                      </div>
-
-                      {/* Add To Cart */}
-                      <button
-                        onClick={() =>
-                          dispatch(
-                            addToCart({
-                              id: item.id,
-                              title: item.title,
-                              image: item.image,
-                              price: item.price,
-                              quantity: 1,
-                            })
-                          )
-                        }
-                        className="w-full h-12 sm:h-[56px] rounded-full bg-black text-white hover:bg-[#1f1f1f] transition-all duration-300 flex items-center justify-center gap-3 font-semibold text-sm sm:text-base"
+                  return (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.25, 0.1, 0.25, 1] }}
+                      className="group relative"
+                    >
+                      <div
+                        className="relative overflow-hidden rounded-[28px] bg-[#faf8f5] border border-[#ede9e3] transition-all duration-500 group-hover:border-[#d4c9b8] group-hover:shadow-[0_18px_40px_rgba(26,20,15,0.09)]"
+                        style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}
                       >
-                        <FiShoppingBag />
-                        Add To Cart
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
+                        {/* IMAGE */}
+                        <Link
+                          href={`/products/${item.id}`}
+                          className="block relative overflow-hidden bg-[#f2ede6]"
+                          style={{ height: "280px" }}
+                        >
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                          />
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                          {discount > 0 && (
+                            <div className="absolute top-4 left-4 bg-black text-white text-[11px] font-semibold tracking-[2px] uppercase rounded-full" style={{ padding: "6px 10px" }}>
+                              {discount}% OFF
+                            </div>
+                          )}
+
+                          {/* Remove Button */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              dispatch(removeFromWishlist(item.id));
+                            }}
+                            className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center bg-white/80 text-gray-600 backdrop-blur-sm hover:bg-red-500 hover:text-white transition-all duration-300"
+                          >
+                            <FiTrash2 className="text-sm" />
+                          </button>
+                        </Link>
+
+                        <div className="h-px bg-[#ede9e3] group-hover:bg-[#c9b99a] transition-colors duration-500" />
+
+                        {/* CONTENT */}
+                        <div style={{ padding: "20px 24px 24px" }}>
+                          <p className="uppercase tracking-[3.5px] text-[10px] text-[#a89b88] font-semibold" style={{ marginBottom: "8px" }}>
+                            {item.category}
+                          </p>
+
+                          <Link href={`/products/${item.id}`}>
+                            <h3 className="font-bold text-[#1a1714] text-[18px] leading-[1.25] tracking-[-0.3px] group-hover:text-black transition-colors duration-200 line-clamp-2" style={{ marginBottom: "16px" }}>
+                              {item.title}
+                            </h3>
+                          </Link>
+
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex flex-col">
+                              <div className="flex items-baseline gap-[10px]">
+                                <span className="text-[22px] font-extrabold text-[#1a1714] tracking-[-0.5px]">₹{item.price}</span>
+                                {item.oldPrice && item.oldPrice > item.price && (
+                                  <span className="text-[13px] text-[#b0a898] line-through">₹{item.oldPrice}</span>
+                                )}
+                              </div>
+                              {discount > 0 && (
+                                <span className="text-[11px] font-semibold text-[#2d6a4f]">
+                                  You save ₹{item.oldPrice! - item.price}
+                                </span>
+                              )}
+                            </div>
+
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  addToCart({
+                                    id: item.id,
+                                    title: item.title,
+                                    image: item.image,
+                                    price: item.price,
+                                    quantity: 1,
+                                  })
+                                )
+                              }
+                              className="flex items-center justify-center w-[44px] h-[44px] rounded-full bg-black text-white hover:bg-[#2a2420] transition-all duration-300 shadow-sm shrink-0"
+                            >
+                              <FiShoppingBag className="text-[15px]" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </>
           )}

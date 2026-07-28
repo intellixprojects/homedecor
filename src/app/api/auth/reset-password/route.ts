@@ -1,15 +1,23 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { email, otp } = await req.json();
+    const { email, otp, newPassword } = await req.json();
 
-    if (!email || !otp) {
+    if (!email || !otp || !newPassword) {
       return NextResponse.json(
-        { success: false, message: "Email and OTP required" },
+        { success: false, message: "All fields required" },
+        { status: 400 }
+      );
+    }
+
+    if (newPassword.length < 8) {
+      return NextResponse.json(
+        { success: false, message: "Password must be at least 8 characters" },
         { status: 400 }
       );
     }
@@ -19,14 +27,7 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json(
         { success: false, message: "User not found" },
-        { status: 400 }
-      );
-    }
-
-    if (user.isVerified) {
-      return NextResponse.json(
-        { success: false, message: "Account already verified" },
-        { status: 400 }
+        { status: 404 }
       );
     }
 
@@ -44,13 +45,14 @@ export async function POST(req: Request) {
       );
     }
 
-    user.isVerified = true;
+    user.password = await bcrypt.hash(newPassword, 10);
     user.otp = "";
     user.otpExpiry = null;
     await user.save();
 
-    return NextResponse.json({ success: true, message: "Account created" });
+    return NextResponse.json({ success: true, message: "Password reset successful" });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }

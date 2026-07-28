@@ -1,92 +1,65 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { Resend } from "resend";
 
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
-
   try {
-
     await connectDB();
+    const { name, email, password, phone } = await req.json();
 
-    const body = await req.json();
-
-    const {
-      name,
-      email,
-      password,
-      phone
-    } = body;
-
-    const existingUser = await User.findOne({
-      email
-    });
-    if (existingUser) {
-
-      return NextResponse.json({
-        success: false,
-        message: "Email already registered"
-      });
+    if (!name || !email || !password || !phone) {
+      return NextResponse.json(
+        { success: false, message: "All fields required" },
+        { status: 400 }
+      );
     }
-    const otp =
-      Math.floor(
-        100000 +
-        Math.random() * 900000
-      ).toString();
 
-    const emailResponse = await resend.emails.send({
+    const existingUser = await User.findOne({ email });
 
-      from: "onboarding@resend.dev",
+    // agar already verified account hai to block karo
+    if (existingUser && existingUser.isVerified) {
+      return NextResponse.json(
+        { success: false, message: "Email already registered" },
+        { status: 400 }
+      );
+    }
 
-      to: email,
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
-      subject: "Verify your NishMee account",
-
-      html:
-        `
-  <h2>Your OTP is</h2>
-  <h1>${otp}</h1>
-  <p>This OTP expires in 10 minutes</p>
-  `
-    });
-    console.log("RESEND RESPONSE:", emailResponse);
-
-    await User.create({
-
-      name,
-      email,
-      phone,
-      password,
-
-      otp,
-
-      otpExpiry:
-        new Date(
-          Date.now() + 10 * 60 * 1000
-        ),
-
-      isVerified: false,
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: "OTP sent"
-    });
-  }
-  catch (error) {
-
-    return NextResponse.json({
-
-      success: false,
-      message: "OTP sending failed"
-
-    },
+    // agar unverified user pehle se hai (retry case) to update karo, warna naya create karo
+    await User.findOneAndUpdate(
+      { email },
       {
-        status: 500
-      })
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+        otp,
+        otpExpiry,
+        isVerified: false,
+      },
+      { upsert: true, new: true }
+    );
+
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: email,
+      subject: "Verify your NishMee account",
+      html: `<h2>Your OTP is</h2><h1>${otp}</h1><p>This OTP expires in 10 minutes</p>`,
+    });
+
+    return NextResponse.json({ success: true, message: "OTP sent" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, message: "OTP sending failed" },
+      { status: 500 }
+    );
   }
 }

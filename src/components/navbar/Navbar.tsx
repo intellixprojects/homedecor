@@ -217,16 +217,16 @@ export default function Navbar({
         className="fixed top-0 left-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl"
       >
         <div className="container-custom flex h-[74px] sm:h-20 items-center justify-between">
-
+ 
           {/* LEFT */}
           <div className="flex items-center gap-8">
-
+ 
             {/* LOGO */}
             <Link href="/">
               <div className="flex flex-col items-start justify-center">
                 <div className="relative h-10 w-20 sm:h-12 sm:w-24">
                   <Image
-                    src="/images/LOGO.png"
+                    src="/images/LOGO-TM.png"
                     alt="NishMee Logo"
                     fill
                     sizes="200px"

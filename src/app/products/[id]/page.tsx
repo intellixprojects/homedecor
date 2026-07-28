@@ -29,6 +29,7 @@ import {
   FiCheckCircle,
   FiXCircle,
   FiMaximize2,
+  FiAward,
 } from "react-icons/fi";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -215,13 +216,20 @@ export default function ProductDetails() {
     <>
 
       <section className="min-h-screen bg-[#f8f5f0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-20 sm:pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-28 sm:pb-24">
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-[13px] text-gray-400 mb-8 sm:mb-9">
+          <div className="flex items-center gap-2 text-[13px] text-gray-400 mb-8 sm:mb-9 flex-wrap">
             <Link href="/" className="hover:text-black transition">Home</Link>
             <span>/</span>
             <Link href="/products" className="hover:text-black transition">Products</Link>
+            <span>/</span>
+            <Link
+              href={`/products?category=${encodeURIComponent(product.category)}`}
+              className="hover:text-black transition"
+            >
+              {product.category}
+            </Link>
             <span>/</span>
             <span className="text-black font-medium truncate max-w-40">{product.title}</span>
           </div>
@@ -255,19 +263,30 @@ export default function ProductDetails() {
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Low stock badge */}
-                {isLowStock && (
-                  <div className="absolute top-4 left-4 bg-red-500 text-white text-[11px] font-bold tracking-[1px] rounded-full px-4 py-2 z-10">
-                    Only {product.stock} left
-                  </div>
-                )}
+                {/* Zoom hint */}
+                <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white text-[11px] font-medium rounded-full px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <FiMaximize2 className="text-[12px]" />
+                  Click to zoom
+                </div>
 
-                {/* Discount — only if not low stock */}
-                {!isLowStock && discount > 0 && (
-                  <div className="absolute top-4 left-4 bg-black text-white text-[11px] font-bold tracking-[2px] rounded-full px-4 py-2 z-10">
-                    {discount}% OFF
-                  </div>
-                )}
+                {/* Badges — stacked */}
+                <div className="absolute top-4 left-4 z-10 flex flex-col items-start gap-2">
+                  {(product.isBestSeller || product.isFeatured) && (
+                    <div className="flex items-center gap-1.5 bg-[#c9a96e] text-white text-[11px] font-bold tracking-[1px] rounded-full px-4 py-2">
+                      <FiAward className="text-[12px]" />
+                      {product.isBestSeller ? "Best Seller" : "Featured"}
+                    </div>
+                  )}
+                  {isLowStock ? (
+                    <div className="bg-red-500 text-white text-[11px] font-bold tracking-[1px] rounded-full px-4 py-2">
+                      Only {product.stock} left
+                    </div>
+                  ) : discount > 0 ? (
+                    <div className="bg-black text-white text-[11px] font-bold tracking-[2px] rounded-full px-4 py-2">
+                      {discount}% OFF
+                    </div>
+                  ) : null}
+                </div>
 
                 <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
                   <button
@@ -319,11 +338,11 @@ export default function ProductDetails() {
                 <p className="uppercase tracking-[5px] text-[11px] text-[#c9a96e] font-semibold">{product.category}</p>
               </div>
 
-              <h1 className="font-black text-[#111827] leading-[1.05] tracking-tight text-[32px] sm:text-[38px] lg:text-[44px] mb-5">
+              <h1 className="font-black text-[#111827] leading-[1.05] tracking-tight text-[32px] sm:text-[38px] lg:text-[44px] mb-4">
                 {product.title}
               </h1>
 
-              {/* RATING + STOCK */}
+              {/* STOCK */}
               <div className="flex items-center flex-wrap gap-4 mb-6">
 
                 {isInStock ? (
@@ -346,6 +365,13 @@ export default function ProductDetails() {
                     <span className="text-sm">Ships in 2–3 days</span>
                   </div>
                 )}
+
+                <a
+                  href="#reviews"
+                  className="text-[13px] text-gray-500 hover:text-black transition underline underline-offset-2"
+                >
+                  See reviews
+                </a>
               </div>
 
               {/* PRICE */}
@@ -355,7 +381,7 @@ export default function ProductDetails() {
                   <div className="mb-1">
                     <span className="line-through text-gray-400 text-lg">₹{product.oldPrice}</span>
                     <span className="block text-[11px] font-bold text-emerald-600 uppercase tracking-wide mt-1">
-                      You save ₹{product.oldPrice - product.price}
+                      You save ₹{product.oldPrice - product.price} ({discount}%)
                     </span>
                   </div>
                 )}
@@ -434,8 +460,8 @@ export default function ProductDetails() {
                 </motion.div>
               )}
 
-              {/* QUANTITY + ADD TO CART */}
-              <div className="flex items-center gap-4 flex-wrap mb-5">
+              {/* QUANTITY + ADD TO CART — desktop/tablet */}
+              <div className="hidden sm:flex items-center gap-4 flex-wrap mb-5">
                 <div className={`flex items-center gap-3 bg-white rounded-full px-2 py-1.5 ${!isInStock ? "opacity-40 pointer-events-none" : ""}`}>
                   <button
                     onClick={() => quantity > 1 && setQuantity(quantity - 1)}
@@ -524,7 +550,39 @@ export default function ProductDetails() {
         </div>
 
         {/* REVIEWS */}
-        {params?.id && <ReviewSection productId={params.id as string} />}
+        <div id="reviews">
+          {params?.id && <ReviewSection productId={params.id as string} />}
+        </div>
+
+        {/* MOBILE STICKY BAR */}
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 px-4 py-3 flex items-center gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+          <div className={`flex items-center gap-2 bg-[#f5f5f5] rounded-full px-2 py-1.5 ${!isInStock ? "opacity-40 pointer-events-none" : ""}`}>
+            <button
+              onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+              disabled={!isInStock}
+              className="w-8 h-8 rounded-full bg-white hover:bg-black hover:text-white transition flex items-center justify-center"
+            >
+              <FiMinus className="text-[13px]" />
+            </button>
+            <span className="w-5 text-center font-bold text-[14px]">{quantity}</span>
+            <button
+              onClick={() => quantity < maxQty && setQuantity(quantity + 1)}
+              disabled={!isInStock || quantity >= maxQty}
+              className={`w-8 h-8 rounded-full text-white transition flex items-center justify-center ${!isInStock || quantity >= maxQty ? "bg-gray-300" : "bg-black"}`}
+            >
+              <FiPlus className="text-[13px]" />
+            </button>
+          </div>
+
+          <motion.button
+            whileTap={isInStock ? { scale: 0.97 } : {}}
+            onClick={handleAddToCart}
+            disabled={!isInStock}
+            className={`flex-1 h-12 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 transition-all duration-300 ${!isInStock ? "bg-gray-200 text-gray-400" : added ? "bg-emerald-600 text-white" : "bg-black text-white"}`}
+          >
+            {!isInStock ? "Out of Stock" : added ? <><FiCheck /> Added</> : <><FiShoppingBag /> Add to Cart</>}
+          </motion.button>
+        </div>
 
         {/* IMAGE POPUP */}
         <AnimatePresence>

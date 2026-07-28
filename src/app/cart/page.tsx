@@ -198,7 +198,7 @@ export default function CartPage() {
                     }`}
                   >
                     {freeShippingLeft === 0
-                      ? "🎉 You've unlocked FREE shipping!"
+                      ? "You've unlocked FREE shipping!"
                       : `Add ₹${freeShippingLeft} more to get free shipping`}
                   </p>
 
@@ -361,7 +361,7 @@ export default function CartPage() {
                     type="text"
                     value={coupon}
                     onChange={(e) => setCoupon(e.target.value)}
-                    placeholder='Have a coupon? Try "LUXURY10"'
+                    placeholder='Have a coupon?' //  Try "LUXURY10"
                     disabled={couponApplied}
                     className="flex-1 bg-transparent text-[13px] font-medium text-[#111827] outline-none placeholder:text-[#c4b8a8] sm:text-[14px]"
                   />
@@ -428,7 +428,7 @@ export default function CartPage() {
                       value: shipping === 0 ? "Free" : `₹${shipping}`,
                       sub:
                         shipping === 0
-                          ? "🎉 You saved ₹40"
+                          ? "You saved ₹40"
                           : "Standard delivery",
                       green: shipping === 0,
                     },

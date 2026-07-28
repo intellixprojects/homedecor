@@ -104,6 +104,42 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleToggleBestSeller = async (id: string, current: boolean, currentStock: number | null) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isBestSeller: !current, stock: currentStock }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error("Failed");
+      await fetchProducts();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update best seller status");
+    }
+  };
+
+  const handleToggleFeatured = async (id: string, current: boolean, currentStock: number | null) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isFeatured: !current,
+          featuredAt: !current ? new Date().toISOString() : null,
+          stock: currentStock,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error("Failed");
+      await fetchProducts();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update featured status");
+    }
+  };
+
   const handleEdit = (item: any) => {
     setOpenModal(true); setIsEditing(true); setEditingId(item._id);
     setTitle(item.title); setCategory(item.category);
@@ -332,6 +368,28 @@ export default function AdminProductsPage() {
                         <FiTrash2 className="text-[13px]" />Delete
                       </button>
                     </div>
+                    <button
+                      onClick={() => handleToggleBestSeller(item._id, item.isBestSeller, item.stock)}
+                      className={`mt-2 flex h-[38px] w-full items-center justify-center gap-1.5 rounded-full text-[12px] font-bold transition-all duration-300 ${
+                        item.isBestSeller
+                          ? "bg-[#c9a96e] text-white"
+                          : "bg-[#f3f4f6] text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#111827]"
+                      }`}
+                    >
+                      <FiStar className="text-[13px]" />
+                      {item.isBestSeller ? "Best Seller ★" : "Mark as Best Seller"}
+                    </button>
+                     <button
+                      onClick={() => handleToggleFeatured(item._id, item.isFeatured, item.stock)}
+                      className={`mt-2 flex h-[38px] w-full items-center justify-center gap-1.5 rounded-full text-[12px] font-bold transition-all duration-300 ${
+                        item.isFeatured
+                          ? "bg-[#111827] text-white"
+                          : "bg-[#f3f4f6] text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#111827]"
+                      }`}
+                    >
+                      <FiStar className="text-[13px]" />
+                      {item.isFeatured ? "Featured ★" : "Mark as Featured"}
+                    </button>
                   </div>
                 </div>
               );

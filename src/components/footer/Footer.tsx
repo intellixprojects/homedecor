@@ -11,15 +11,24 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#0d0d0d] text-white mt-16 sm:mt-20">
+    <footer className="relative overflow-hidden bg-[#0d0d0d] text-white  sm:mt-20">
       <div className="absolute top-0 left-0 h-55 w-55 sm:h-75 sm:w-75 rounded-full bg-white/5 blur-3xl opacity-30" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 pb-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-6 sm:pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-14 border-b border-white/10 pb-12">
           {/* Brand — same as before */}
           <div>
-            <h2 className="text-3xl sm:text-3xl font-black tracking-wide mb-5">
-              NISH<span className="text-[#c9a96e]">MEE</span>
+            <h2 className="text-lg sm:text-xl font-bold tracking-wide mb-6">
+              About Our Store
+              {/* <span className="text-[17px] sm:text-[18px] font-bold text-white uppercase tracking-[6px] text-[#111827]">
+                nish
+              </span>
+              <span className="text-[17px] sm:text-[18px] font-bold uppercase tracking-[6px] text-[#c9a96e]">
+                mee
+                <sup className="ml-[1px] text-[8px] sm:text-[9px] font-medium align-super tracking-normal text-[#c9a96e]">
+                  ™
+                </sup>
+              </span> */}
             </h2>
 
             <p className="text-gray-400 leading-7 sm:leading-8 text-sm sm:text-base mb-7">
@@ -139,9 +148,15 @@ export default function Footer() {
         {/* Bottom — same as before */}
         <div className="pt-7 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-500 text-sm sm:text-base">
           <p className="text-center md:text-left">
-            © 2026 NISHMEE. All Rights Reserved.
+           © 2026 NISHMEE™. All Rights Reserved.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-5">
+            <Link
+              href="/return-policy"
+              className="hover:text-white transition duration-300"
+            >
+              Return Policy
+            </Link>
             <Link
               href="/privacy-policy"
               className="hover:text-white transition duration-300"

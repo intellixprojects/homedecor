@@ -3,14 +3,15 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { FiArrowUpRight } from "react-icons/fi";
 
 const categories = [
-  { id: 4, title: "Divine Collection", image: "/images/ganesh/ganesh1.jpeg", slug: "divine" },
-  { id: 5, title: "Buddha & Monk", image: "/images/monk/monk1.jpeg", slug: "buddha-monk" },
-  { id: 6, title: "Luxury Sculptures", image: "/images/panther/panther1.jpeg", slug: "luxury-sculptures" },
-  { id: 1, title: "Artisan Vases", image: "/images/Vases/Vase1.jpeg", slug: "vases" },
-  { id: 2, title: "Luxury Showpieces", image: "/images/showpieces/showpiece1.jpeg", slug: "showpieces" },
-  { id: 3, title: "Handcrafted Idols", image: "/images/Idols/idols1.jpeg", slug: "idols" },
+  { id: 4, title: "Divine Collection", category: "Divine Collection", subtitle: "Sacred idols & spiritual pieces", image: "/images/ganesh/ganesh1.jpeg", slug: "divine" },
+  { id: 5, title: "Buddha & Monk", category: "Buddha & Monk", subtitle: "Serenity for every space", image: "/images/monk/monk1.jpeg", slug: "buddha-monk" },
+  { id: 6, title: "Luxury Sculptures", category: "Luxury Sculptures", subtitle: "Statement pieces, crafted fine", image: "/images/panther/panther1.jpeg", slug: "luxury-sculptures" },
+  { id: 1, title: "Artisan Vases", category: "Vases", subtitle: "Handmade ceramic elegance", image: "/images/Vases/Vase1.jpeg", slug: "vases" },
+  { id: 2, title: "Luxury Showpieces", category: "Showpieces", subtitle: "Curated to elevate interiors", image: "/images/showpieces/showpiece1.jpeg", slug: "showpieces" },
+  { id: 3, title: "Handcrafted Idols", category: "Handcraft Idols", subtitle: "Timeless craftsmanship", image: "/images/Idols/idols1.jpeg", slug: "idols" },
 ];
 
 export default function Categories() {
@@ -90,24 +91,28 @@ export default function Categories() {
           {categories.map((item, index) => (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.7,
-                delay: index * 0.15,
-                ease: [0.25, 0.1, 0.25, 1],
+                duration: 0.8,
+                delay: index * 0.1,
+                ease: [0.16, 1, 0.3, 1],
               }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-40px" }}
               whileHover="hover"
-              className="relative overflow-hidden rounded-md cursor-pointer aspect-[3/4] group"
+              onClick={() => router.push(`/products?category=${encodeURIComponent(item.category)}`)} 
+              className="relative overflow-hidden rounded-[20px] cursor-pointer aspect-[3/4] group"
+              style={{
+                boxShadow: "0 20px 50px rgba(26,22,18,0.08)",
+              }}
             >
 
               {/* Image */}
               <motion.div
                 variants={{ hover: { scale: 1.08 } }}
                 transition={{
-                  duration: 0.8,
-                  ease: [0.25, 0.1, 0.25, 1],
+                  duration: 1,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
                 className="absolute inset-0"
               >
@@ -116,35 +121,43 @@ export default function Categories() {
                   alt={item.title}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               </motion.div>
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[rgba(10,8,6,0.85)] via-[rgba(10,8,6,0.3)] to-[rgba(10,8,6,0.05)]" />
-
-              {/* Hover Overlay */}
-              <motion.div
-                variants={{ hover: { opacity: 1 } }}
-                initial={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="absolute inset-0 z-[2] bg-[rgba(184,160,122,0.15)]"
-              />
+              <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[rgba(10,8,6,0.9)] via-[rgba(10,8,6,0.25)] to-[rgba(10,8,6,0.1)]" />
 
               {/* Content */}
               <div
                 className="absolute bottom-0 left-0 right-0 z-[3]"
-                style={{ padding: "32px 28px" }}
+                style={{ padding: "30px 26px" }}
               >
+                {/* Subtitle */}
+                <motion.p
+                  variants={{ hover: { opacity: 1, y: 0 } }}
+                  initial={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className="text-[#e8dcc8]"
+                  style={{
+                    fontSize: "12px",
+                    letterSpacing: "1px",
+                    marginBottom: "8px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  {item.subtitle}
+                </motion.p>
 
                 {/* Title */}
                 <h3
                   className="text-white leading-tight"
                   style={{
                     fontFamily: "'Cormorant Garamond', Georgia, serif",
-                    fontSize: "26px",
+                    fontSize: "27px",
                     fontWeight: 400,
                     letterSpacing: "0.3px",
-                    margin: "0 0 20px 0",
+                    margin: "0 0 18px 0",
                   }}
                 >
                   {item.title}
@@ -152,36 +165,43 @@ export default function Categories() {
 
                 {/* Divider + Button */}
                 <div
-                  className="flex items-center"
+                  className="flex items-center justify-between"
                   style={{ gap: "16px" }}
                 >
-                  <div className="flex-1 h-[1px] bg-white/20" />
+                  <motion.div
+                    variants={{ hover: { width: "100%", backgroundColor: "rgba(184,160,122,0.6)" } }}
+                    initial={{ width: "24px" }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-[1px] bg-white/25"
+                  />
 
-                  <motion.button
-                    onClick={() => router.push(`/products?category=${encodeURIComponent(item.title)}`)}
+                  <motion.div
                     variants={{
                       hover: {
                         backgroundColor: "#b8a07a",
                         borderColor: "#b8a07a",
                         color: "#1a1612",
+                        gap: "10px",
                       },
                     }}
-                    transition={{ duration: 0.3 }}
-                    className="uppercase border rounded-sm whitespace-nowrap"
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex items-center uppercase border rounded-full whitespace-nowrap flex-shrink-0"
                     style={{
-                      fontFamily:
-                        "'Cormorant Garamond', Georgia, serif",
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontSize: "11px",
-                      letterSpacing: "3px",
+                      letterSpacing: "2.5px",
                       color: "#ffffff",
-                      background: "transparent",
-                      border: "1px solid rgba(255,255,255,0.5)",
-                      padding: "10px 20px",
-                      cursor: "pointer",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.4)",
+                      padding: "11px 18px",
+                      gap: "6px",
                     }}
                   >
                     Explore
-                  </motion.button>
+                    <FiArrowUpRight
+                      style={{ fontSize: "13px" }}
+                    />
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
