@@ -16,7 +16,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      message: `✅ ${inserted.length} products MongoDB me daal diye!`,
+      message: `${inserted.length} products MongoDB me daal diye!`,
     });
   } catch (error) {
     return NextResponse.json({

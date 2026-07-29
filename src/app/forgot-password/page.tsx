@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 import {
   FiMail,
@@ -78,6 +79,7 @@ export default function ForgotPasswordPage() {
 
       setStep("reset");
       startResendCooldown();
+      toast.success("OTP sent to your email");
     } catch (error) {
       console.log(error);
       setEmailError("Something went wrong");
@@ -97,10 +99,11 @@ export default function ForgotPasswordPage() {
       });
       const data = await res.json();
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message);
         return;
       }
       startResendCooldown();
+      toast.success("OTP resent");
     } finally {
       setLoading(false);
     }
@@ -140,7 +143,7 @@ export default function ForgotPasswordPage() {
         return;
       }
 
-      alert("Password reset successful! Please login with your new password.");
+      toast.success("Password reset successful! Please login with your new password.");
       router.push("/login");
     } catch (error) {
       console.log(error);

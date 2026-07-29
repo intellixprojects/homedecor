@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiStar, FiUpload, FiX, FiCamera } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 interface Review {
   _id: string;
@@ -51,7 +52,7 @@ export default function ReviewSection({ productId }: { productId: string }) {
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (photos.length + files.length > 3) {
-      alert("Maximum 3 photos allowed");
+      toast.error("Maximum 3 photos allowed");
       return;
     }
     setPhotos((prev) => [...prev, ...files]);
@@ -65,7 +66,7 @@ export default function ReviewSection({ productId }: { productId: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.rating === 0) { alert("Please select a rating"); return; }
+    if (form.rating === 0) { toast.error("Please select a rating"); return; }
     setSubmitting(true);
     try {
       const uploadedUrls: string[] = [];
@@ -90,12 +91,15 @@ export default function ReviewSection({ productId }: { productId: string }) {
         setPhotos([]);
         setPhotoPreviews([]);
         fetchReviews();
+        toast.success("Review submitted successfully");
         setTimeout(() => { setStatus(""); setFormOpen(false); }, 2500);
       } else {
         setStatus("error");
+        toast.error(data.message || "Failed to submit review");
       }
     } catch {
       setStatus("error");
+      toast.error("Something went wrong");
     }
     setSubmitting(false);
   };
@@ -385,7 +389,7 @@ export default function ReviewSection({ productId }: { productId: string }) {
         </div>
       )}
 
-      {/* PHOTO PREVIEW MODAL */}
+      {/* PHOTO PREVIEW MODEL */}
       <AnimatePresence>
         {previewPhoto && (
           <motion.div

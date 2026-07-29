@@ -361,7 +361,7 @@ export default function CartPage() {
                     type="text"
                     value={coupon}
                     onChange={(e) => setCoupon(e.target.value)}
-                    placeholder='Have a coupon?' //  Try "LUXURY10"
+                    placeholder='Have a coupon?'
                     disabled={couponApplied}
                     className="flex-1 bg-transparent text-[13px] font-medium text-[#111827] outline-none placeholder:text-[#c4b8a8] sm:text-[14px]"
                   />

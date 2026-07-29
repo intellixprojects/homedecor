@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -79,7 +80,7 @@ export default function ProfilePage() {
       const data = await res.json();
 
       if (!data.success) {
-        alert(data.message || "Failed to save");
+        toast.error(data.message || "Failed to save");
         return;
       }
 
@@ -92,8 +93,9 @@ export default function ProfilePage() {
 
       setSaved(form);
       setIsEditing(false);
+      toast.success("Profile updated successfully");
     } catch (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setSaving(false);
     }

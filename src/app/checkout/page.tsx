@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { loadCart } from "@/store/features/cartSlice";
+import toast from "react-hot-toast";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -127,7 +128,7 @@ export default function CheckoutPage() {
     try {
       const loaded = await loadRazorpayScript();
       if (!loaded) {
-        alert("Razorpay failed to load. Check your internet connection.");
+        toast.error("Razorpay failed to load. Check your internet connection.");
         setProcessing(false);
         return;
       }
@@ -140,7 +141,7 @@ export default function CheckoutPage() {
       const orderData = await orderRes.json();
 
       if (!orderData.success) {
-        alert("Could not initiate payment. Please try again.");
+        toast.error("Could not initiate payment. Please try again.");
         setProcessing(false);
         return;
       }
@@ -181,7 +182,7 @@ export default function CheckoutPage() {
             const verifyData = await verifyRes.json();
 
             if (!verifyData.success) {
-              alert("Payment verification failed. Contact support.");
+              toast.error("Payment verification failed. Contact support.");
               setProcessing(false);
               return;
             }
@@ -189,16 +190,17 @@ export default function CheckoutPage() {
             const saved = await saveOrder(response.razorpay_payment_id, "Paid");
             if (saved.success) {
               dispatch(clearCart());
+              toast.success("Order placed successfully!");
               window.location.href = "/success";
             } else {
-              alert(
+              toast.error(
                 "Order save failed. Contact support with payment ID: " +
                 response.razorpay_payment_id,
               );
             }
           } catch (err) {
             console.error(err);
-            alert("Something went wrong after payment.");
+            toast.error("Something went wrong after payment.");
           } finally {
             setProcessing(false);
           }
@@ -215,7 +217,7 @@ export default function CheckoutPage() {
       rzp.open();
     } catch (error) {
       console.error(error);
-      alert("Payment failed. Please try again.");
+      toast.error("Payment failed. Please try again.");
       setProcessing(false);
     }
   };
@@ -227,13 +229,14 @@ export default function CheckoutPage() {
       const saved = await saveOrder("COD", "Pending");
       if (saved.success) {
         dispatch(clearCart());
+        toast.success("Order placed successfully!");
         window.location.href = "/success";
       } else {
-        alert(saved.message || "Order creation failed");
+        toast.error(saved.message || "Order creation failed");
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setProcessing(false);
     }
@@ -249,23 +252,23 @@ export default function CheckoutPage() {
       !formData.state ||
       !formData.zip
     ) {
-      alert("Please fill all required fields");
+      toast.error("Please fill all required fields");
       return;
     }
 
     if (!/^[6-9]\d{9}$/.test(formData.phone)) {
-      alert("Please enter a valid 10 digit mobile number");
+      toast.error("Please enter a valid 10 digit mobile number");
       return;
     }
 
     if (!/^\d{6}$/.test(formData.zip)) {
-      alert("Please enter a valid 6 digit pincode");
+      toast.error("Please enter a valid 6 digit pincode");
       return;
     }
 
     const userEmail = currentUser?.email || formData.email;
     if (!userEmail) {
-      alert("Please login to place an order");
+      toast.error("Please login to place an order");
       window.location.href = "/login";
       return;
     }
@@ -576,13 +579,6 @@ export default function CheckoutPage() {
                     Cash On Delivery
                   </button>
                 </div>
-
-                {/* {paymentMethod === "razorpay" && (
-                  <p className="mb-4 text-center text-[11px] font-semibold text-amber-600">
-                    Test Mode — Card: 4718 6000 0000 0002 | 12/26 | CVV 123 |
-                    OTP 1234
-                  </p>
-                )} */}
 
                 <motion.button
                   whileHover={{ y: -2 }}

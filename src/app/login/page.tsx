@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 import { login } from "@/store/features/authSlice";
 import { loadCart } from "@/store/features/cartSlice";
@@ -37,7 +38,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -61,7 +62,7 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message || "Invalid email or password");
         return;
       }
 
@@ -75,7 +76,7 @@ export default function LoginPage() {
       dispatch(loadCart());
       dispatch(loadWishlist());
 
-      alert("Login Successful");
+      toast.success("Login successful");
 
       setTimeout(() => {
         router.push("/");
@@ -84,7 +85,7 @@ export default function LoginPage() {
 
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

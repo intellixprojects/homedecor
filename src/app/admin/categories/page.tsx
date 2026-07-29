@@ -17,7 +17,6 @@ import {
   FiSearch,
   FiInbox,
 } from "react-icons/fi";
-import { group } from "console";
 
 type CategoryStat = {
   name: string;

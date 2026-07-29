@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import imageCompression from "browser-image-compression";
+import toast from "react-hot-toast";
 
 import {
   FiTrash2,
@@ -97,10 +98,10 @@ export default function AdminProductsPage() {
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
       await fetchProducts();
-      alert("Product deleted successfully");
+      toast.success("Product deleted successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to delete product");
+      toast.error("Failed to delete product");
     }
   };
 
@@ -114,9 +115,10 @@ export default function AdminProductsPage() {
       const data = await res.json();
       if (!data.success) throw new Error("Failed");
       await fetchProducts();
+      toast.success(!current ? "Marked as Best Seller" : "Removed from Best Sellers");
     } catch (error) {
       console.error(error);
-      alert("Failed to update best seller status");
+      toast.error("Failed to update best seller status");
     }
   };
 
@@ -134,9 +136,10 @@ export default function AdminProductsPage() {
       const data = await res.json();
       if (!data.success) throw new Error("Failed");
       await fetchProducts();
+      toast.success(!current ? "Marked as Featured" : "Removed from Featured");
     } catch (error) {
       console.error(error);
-      alert("Failed to update featured status");
+      toast.error("Failed to update featured status");
     }
   };
 
@@ -162,7 +165,7 @@ export default function AdminProductsPage() {
   if (!file) return;
 
   if (file.size > 10 * 1024 * 1024) {
-    alert("Please upload an image smaller than 10 MB");
+    toast.error("Please upload an image smaller than 10 MB");
     return;
   }
 
@@ -196,7 +199,7 @@ export default function AdminProductsPage() {
     setImages(updatedImages);
   } catch (error) {
     console.error(error);
-    alert("Image upload failed");
+    toast.error("Image upload failed");
   } finally {
     const doneLoading = [...uploadingIndex];
     doneLoading[index] = false;
@@ -206,7 +209,7 @@ export default function AdminProductsPage() {
 
   const handleAddOrUpdateProduct = async () => {
     if (!title || !category || !price || !images[0] || !images[1] || !images[2]) {
-      alert("Please fill all required fields & upload minimum 3 images");
+      toast.error("Please fill all required fields & upload minimum 3 images");
       return;
     }
 
@@ -237,10 +240,10 @@ export default function AdminProductsPage() {
       await fetchProducts();
       resetForm();
       setOpenModal(false);
-      alert(isEditing ? "Product updated successfully" : "Product added successfully");
+      toast.success(isEditing ? "Product updated successfully" : "Product added successfully");
     } catch (error) {
       console.error(error);
-      alert("Failed to add product");
+      toast.error("Failed to add product");
     }
   };
 

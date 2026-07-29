@@ -17,7 +17,6 @@ import {
   FiAlertTriangle,
 } from "react-icons/fi";
 
-import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 
 type OrderItem = {

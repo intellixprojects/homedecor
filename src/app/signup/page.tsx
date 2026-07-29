@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 import {
   FiUser,
@@ -88,15 +89,16 @@ export default function SignupPage() {
       const data = await res.json();
 
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message);
         return;
       }
 
       setStep("otp");
       startResendCooldown();
+      toast.success("OTP sent to your email");
     } catch (error) {
       console.log(error);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -127,7 +129,7 @@ export default function SignupPage() {
         return;
       }
 
-      alert("Account created successfully!");
+      toast.success("Account created successfully!");
       router.push("/login");
     } catch (error) {
       console.log(error);
@@ -148,10 +150,11 @@ export default function SignupPage() {
       });
       const data = await res.json();
       if (!data.success) {
-        alert(data.message);
+        toast.error(data.message);
         return;
       }
       startResendCooldown();
+      toast.success("OTP resent");
     } finally {
       setLoading(false);
     }

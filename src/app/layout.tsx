@@ -7,6 +7,7 @@ import ProductsInitializer from "@/components/ProductsInitializer";
 import AuthInitializer from "@/components/AuthInitializer";
 import Navbar from "@/components/navbar/Navbar";
 import { getCategories } from "@/lib/getCategories";
+import { Toaster } from "react-hot-toast";
 
 import { Poppins, Playfair_Display } from "next/font/google";
 
@@ -81,6 +82,27 @@ export default async function RootLayout({
           <ProductsInitializer />
           <Navbar initialCategories={categories} />
           {children}
+
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: "#111827",
+                color: "#fff",
+                borderRadius: "12px",
+                padding: "12px 18px",
+                fontSize: "14px",
+                fontWeight: 600,
+              },
+              success: {
+                iconTheme: { primary: "#c9a96e", secondary: "#fff" },
+              },
+              error: {
+                iconTheme: { primary: "#ef4444", secondary: "#fff" },
+              },
+            }}
+          />
         </ReduxProvider>
       </body>
     </html>
