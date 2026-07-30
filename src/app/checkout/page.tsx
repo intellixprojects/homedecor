@@ -78,7 +78,7 @@ export default function CheckoutPage() {
     0,
   );
   const discount = subtotal >= 1999 ? Math.round(subtotal * 0.1) : 0;
-  const shipping = subtotal > 500 ? 0 : 40;
+  const shipping = subtotal > 500 ? 0 : 50;
   const total = subtotal - discount + shipping;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

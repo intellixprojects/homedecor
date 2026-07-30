@@ -54,7 +54,7 @@ export default function CartPage() {
 
   const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
 
-  const shipping = subtotal > 500 ? 0 : 40;
+  const shipping = subtotal > 500 ? 0 : 50;
 
   const total = subtotal - discount + shipping;
 
@@ -428,7 +428,7 @@ export default function CartPage() {
                       value: shipping === 0 ? "Free" : `₹${shipping}`,
                       sub:
                         shipping === 0
-                          ? "You saved ₹40"
+                          ? "You saved ₹50"
                           : "Standard delivery",
                       green: shipping === 0,
                     },
