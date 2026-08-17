@@ -181,12 +181,12 @@ export default function LoginPage() {
                   <label className="block text-[13px] font-semibold text-[#111827] sm:text-[14px]">
                     Password
                   </label>
-                  <Link
+                  {/* <Link
                     href="/forgot-password"
                     className="text-[12px] font-semibold text-[#c9a96e] hover:text-black transition sm:text-[13px]"
                   >
                     Forgot Password?
-                  </Link>
+                  </Link> */}
                 </div>
 
                 <div className="flex h-[56px] items-center gap-3 rounded-[16px] border border-transparent bg-[#f8f5f0] px-4 transition focus-within:border-black sm:h-[60px] sm:rounded-[18px] sm:px-5">
