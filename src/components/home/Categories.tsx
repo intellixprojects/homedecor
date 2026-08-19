@@ -169,10 +169,13 @@ export default function Categories() {
                   style={{ gap: "16px" }}
                 >
                   <motion.div
-                    variants={{ hover: { width: "100%", backgroundColor: "rgba(184,160,122,0.6)" } }}
-                    initial={{ width: "24px" }}
+                    variants={{ 
+                      initial: { width: "24px", backgroundColor: "rgba(255,255,255,0.25)" },
+                      hover: { width: "100%", backgroundColor: "rgba(184,160,122,0.6)" } 
+                    }}
+                    initial="initial"
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="h-[1px] bg-white/25"
+                    className="h-[1px]"
                   />
 
                   <motion.div

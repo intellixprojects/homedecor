@@ -45,7 +45,7 @@ export default function Footer() {
                 },
                 {
                   icon: FiInstagram,
-                  link: "https://www.instagram.com/shopnishmee/",
+                  link: "https://www.instagram.com/nishmeeofficial?igsh=MTluZTJranF3N2E1Zg==&igsi=MTluZTJranF3N2E1Zg==",
                 },
                 {
                   icon: FiTwitter,
