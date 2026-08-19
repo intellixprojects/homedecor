@@ -20,15 +20,6 @@ export default function Footer() {
           <div>
             <h2 className="text-lg sm:text-xl font-bold tracking-wide mb-6">
               About Our Store
-              {/* <span className="text-[17px] sm:text-[18px] font-bold text-white uppercase tracking-[6px] text-[#111827]">
-                nish
-              </span>
-              <span className="text-[17px] sm:text-[18px] font-bold uppercase tracking-[6px] text-[#c9a96e]">
-                mee
-                <sup className="ml-[1px] text-[8px] sm:text-[9px] font-medium align-super tracking-normal text-[#c9a96e]">
-                  ™
-                </sup>
-              </span> */}
             </h2>
 
             <p className="text-gray-400 leading-7 sm:leading-8 text-sm sm:text-base mb-7">
